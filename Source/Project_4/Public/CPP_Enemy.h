@@ -22,7 +22,7 @@ public:
 public:
 	virtual void Movement();
 	virtual void Attack();
-	virtual void Hit(int32 damage, AActor* byWho);
+	virtual void GetHit(int32 damage, AActor* byWho);
 	virtual void Die();
 	virtual void DropItem();
 	void SetMaxHp(int32 hp);
@@ -37,7 +37,10 @@ public:
 public :
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = FSMComponent)
 	TObjectPtr<class UCPP_Enemy_FSM> fsm;
-
+	/*
+	UPROPERTY(VisibleAnywhere)
+	TObjectPtr<class UCollisionCylinder> collision;
+	*/
 	UPROPERTY(EditAnywhere)
 	int32 maxHp;
 
@@ -52,4 +55,5 @@ public :
 
 protected :
 	int32 currentHp;
+	
 };

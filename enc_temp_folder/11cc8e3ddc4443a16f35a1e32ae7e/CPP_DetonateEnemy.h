@@ -22,7 +22,7 @@ public:
 
 public:
 	void Attack() override;
-	void GetHit(int32 damage, AActor* byWho) override;
+	void Hit(int32 damage, AActor* byWho) override;
 	void Movement() override;
 	void DropItem() override;
 	void Die() override;

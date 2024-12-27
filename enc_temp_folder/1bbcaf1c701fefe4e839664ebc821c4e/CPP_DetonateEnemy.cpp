@@ -23,9 +23,9 @@ void ACPP_DetonateEnemy::Attack()
 	Super::Attack();
 }
 
-void ACPP_DetonateEnemy::GetHit(int32 damage, AActor* byWho)
+void ACPP_DetonateEnemy::Hit(int32 damage, AActor* byWho)
 {
-	Super::GetHit(damage, byWho);
+	Super::Hit(damage, byWho);
 
 	if (currentHp > 0) return;
 

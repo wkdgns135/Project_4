@@ -66,7 +66,7 @@ FVector UCPP_Enemy_FSM::SetTargetFocus()
 
 void UCPP_Enemy_FSM::IdleAction()
 {
-	
+	//Idle이 아니라 패트롤 구현이 필요함.
 }
 
 void UCPP_Enemy_FSM::MoveAction(float DeltaTime)
@@ -119,7 +119,7 @@ void UCPP_Enemy_FSM::HitAction()
 void UCPP_Enemy_FSM::DieAction()
 {
 	me->DropItem();
-	delete me;
+	me->Destroy();
 }
 
 void UCPP_Enemy_FSM::SetIdleState()

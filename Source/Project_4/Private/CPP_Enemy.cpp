@@ -39,7 +39,7 @@ void ACPP_Enemy::Attack()
 	//따라서 FSM에서 호출하면 적 유형별 공격을 오버라이딩하는 코드 필요.
 }
 
-void ACPP_Enemy::Hit(int32 damage, AActor* byWho)
+void ACPP_Enemy::GetHit(int32 damage, AActor* byWho)
 {
 	//충돌한 액터가 무엇인지 판별하여 플레이어의 공격인지 판별하는 코드 필요.
 	if (fsm) fsm->mState = EEnemyState::HIT;
