@@ -13,11 +13,17 @@ class PROJECT_4_API ACPP_DetonateEnemy : public ACPP_Enemy
 	
 public:
 	ACPP_DetonateEnemy();
+
+protected:
 	virtual void BeginPlay() override;
+
+public:
 	virtual void Tick(float DeltaTime) override;
-	virtual void Attack() override;
-	virtual void Hit(int32 damage, AActor* byWho) override;
-	virtual void Movement() override;
-	virtual void DropItem() override;
-	virtual void Die() override;
+
+public:
+	void Attack() override;
+	void Hit(int32 damage, AActor* byWho) override;
+	void Movement() override;
+	void DropItem() override;
+	void Die() override;
 };

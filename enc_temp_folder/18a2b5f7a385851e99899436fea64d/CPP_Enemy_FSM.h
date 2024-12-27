@@ -1,3 +1,5 @@
+// Fill out your copyright notice in the Description page of Project Settings.
+
 #pragma once
 
 //#include "CPP_Enemy.h"
@@ -59,8 +61,7 @@ public:
 private:
 	float moveSpeed;
 	float attackRange;
-	float hitDelayTime;
-	float currentTime;
+		
 };
 
 

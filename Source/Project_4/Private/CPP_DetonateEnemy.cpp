@@ -3,11 +3,9 @@
 #include "CPP_Enemy_FSM.h"
 #include "CPP_DetonateEnemy.h"
 
-
-
 ACPP_DetonateEnemy::ACPP_DetonateEnemy()
 {
-	
+	//fsm = CreateDefaultSubobject<UCPP_Enemy_FSM>(TEXT("FSM"));
 }
 
 void ACPP_DetonateEnemy::BeginPlay()

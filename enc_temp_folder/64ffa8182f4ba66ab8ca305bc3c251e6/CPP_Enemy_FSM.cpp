@@ -1,12 +1,21 @@
+// Fill out your copyright notice in the Description page of Project Settings.
+
+
 #include "CPP_Enemy_FSM.h"
 
+// Sets default values for this component's properties
 
 UCPP_Enemy_FSM::UCPP_Enemy_FSM()
 {
+	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
+	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
 
+	// ...
 }
 
+
+// Called when the game starts
 void UCPP_Enemy_FSM::BeginPlay()
 {
 	Super::BeginPlay();
@@ -16,14 +25,16 @@ void UCPP_Enemy_FSM::BeginPlay()
 	target = Cast<ACPP_TestPlayer>(actor);
 	
 	me = Cast<ACPP_Enemy>(GetOwner());
-	hitDelayTime = 1.0f;
+	
 }
 
+
+// Called every frame
 void UCPP_Enemy_FSM::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	currentTime += DeltaTime;
+	// ...
 
 	switch (mState)
 	{
@@ -59,6 +70,7 @@ FVector UCPP_Enemy_FSM::SetTargetFocus()
 
 	FRotator newRotation = directionTarget.Rotation();
 
+	//me->SetActorRotation(FRotator(0, newRotation.Yaw, 0));
 	me->SetActorRotation(newRotation);
 
 	return directionTarget;
@@ -71,7 +83,7 @@ void UCPP_Enemy_FSM::IdleAction()
 
 void UCPP_Enemy_FSM::MoveAction(float DeltaTime)
 {
-	if (target && me)
+	if (target != nullptr && me != nullptr)
 	{
 		FVector Direction = SetTargetFocus();
 
@@ -88,7 +100,7 @@ void UCPP_Enemy_FSM::MoveAction(float DeltaTime)
 
 void UCPP_Enemy_FSM::AttackAction(float DeltaTime)
 {
-	if (target && me )
+	if (target != nullptr && me != nullptr)
 	{
 		FVector Direction = SetTargetFocus();
 
@@ -111,14 +123,11 @@ void UCPP_Enemy_FSM::AttackAction(float DeltaTime)
 
 void UCPP_Enemy_FSM::HitAction()
 {
-	currentTime = 0;
 
-	if (currentTime > hitDelayTime) mState = EEnemyState::MOVE;
 }
 
 void UCPP_Enemy_FSM::DieAction()
 {
-	me->DropItem();
 	delete me;
 }
 
