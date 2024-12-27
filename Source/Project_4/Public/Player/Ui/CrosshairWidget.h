@@ -29,5 +29,6 @@ public:
     UImage* LineRight;
 
     // 위치 업데이트 함수
-    void UpdateCrosshair(float Speed, float FireRate, float Recoil);
+    UFUNCTION(BlueprintCallable, Category = "Crosshair")
+    void UpdateCrosshairSize(float Speed);
 };
