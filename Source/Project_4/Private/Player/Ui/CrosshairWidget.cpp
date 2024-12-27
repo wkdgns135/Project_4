@@ -3,13 +3,13 @@
 
 #include "Player/Ui/CrosshairWidget.h"
 
-void UCrosshairWidget::UpdateCrosshair(float Speed, float FireRate, float Recoil)
+void UCrosshairWidget::UpdateCrosshairSize(float Speed)
 {
     if (!LineTop || !LineBottom || !LineLeft || !LineRight)
         return;
 
     // 위치 계산 (간격은 Speed, FireRate, Recoil 값을 기반으로 설정)
-    float Offset = FMath::Clamp(Speed * 0.1f + FireRate * 0.2f + Recoil * 5.0f, 0.0f, 50.0f);
+    float Offset = FMath::Clamp(Speed * 0.1f, 0, 50.0f);
 
     // 각 라인의 위치 조정
     LineTop->SetRenderTranslation(FVector2D(0, -Offset));
