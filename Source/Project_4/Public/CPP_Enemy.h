@@ -2,10 +2,7 @@
 
 #pragma once
 
-<<<<<<< Updated upstream
-=======
 //#include "CPP_Enemy_FSM.h"
->>>>>>> Stashed changes
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "CPP_Enemy.generated.h"
@@ -18,10 +15,7 @@ class PROJECT_4_API ACPP_Enemy : public ACharacter
 public:
 	// Sets default values for this character's properties
 	ACPP_Enemy();
-<<<<<<< Updated upstream
 
-=======
->>>>>>> Stashed changes
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -30,8 +24,6 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-<<<<<<< Updated upstream
-=======
 public:
 	virtual void Movement();
 	virtual void Attack();
@@ -66,5 +58,4 @@ protected :
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<class USkeletalMeshComponent> SkeletalMeshComponent;
 	*/
->>>>>>> Stashed changes
 };
