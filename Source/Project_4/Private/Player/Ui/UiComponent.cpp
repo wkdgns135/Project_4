@@ -2,6 +2,8 @@
 
 
 #include "Player/Ui/UiComponent.h"
+#include "GameFramework/Character.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 // Sets default values for this component's properties
 UUiComponent::UUiComponent()
@@ -45,20 +47,26 @@ void UUiComponent::UpdateCrosshair(float DeltaTime)
     {
         FVector Velocity = Owner->GetVelocity();
         float Speed = Velocity.Size();
-
-        if (Speed > 100)
-        {
-            AimSize += Speed * DeltaTime; // 빠르게 증가
+        bool IsJumping = Cast<ACharacter>(Owner)->GetCharacterMovement()->IsFalling();
+        
+        if (IsJumping) {
+            UE_LOG(LogTemp, Display, TEXT("JUMP"));
+            AimSize += 2000.f * DeltaTime; // 빠르게 증가
         }
-        else if (Speed > 0)
-        {
-            AimSize -= FMath::Clamp(Speed * DeltaTime * 10, 0.0f, AimSize); // 점진적으로 감소
+        else {
+            if (Speed > 100)
+            {
+                AimSize += Speed * DeltaTime; // 빠르게 증가
+            }
+            else if (Speed > 0)
+            {
+                AimSize -= FMath::Clamp(Speed * DeltaTime * 50, 0.0f, AimSize); // 점진적으로 감소
+            }
+            else
+            {
+                AimSize -= FMath::Clamp(2000.f * DeltaTime, 0.0f, AimSize); // 빠르게 감소
+            }
         }
-        else
-        {
-            AimSize -= FMath::Clamp(1000 * DeltaTime, 0.0f, AimSize); // 빠르게 감소
-        }
-
         // 최소 크기 제한
         AimSize = FMath::Max(AimSize, 0.0f);
 
