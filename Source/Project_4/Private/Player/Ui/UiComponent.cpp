@@ -30,8 +30,6 @@ void UUiComponent::BeginPlay()
 			CrosshairWidget->AddToViewport();
 		}
 	}
-	
-    AimSize = 0;
 }
 
 

@@ -21,8 +21,6 @@ AProjectile::AProjectile()
     // Create and configure a projectile movement component
     ProjectileMovementComponent = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("ProjectileMovementComponent"));
     ProjectileMovementComponent->SetUpdatedComponent(CollisionComponent);
-    ProjectileMovementComponent->InitialSpeed = 3000.0f;
-    ProjectileMovementComponent->MaxSpeed = 3000.0f;
     ProjectileMovementComponent->bRotationFollowsVelocity = true;
     ProjectileMovementComponent->bShouldBounce = true;
     ProjectileMovementComponent->Bounciness = 0.3f;
@@ -89,7 +87,9 @@ void AProjectile::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, U
     Destroy();
 }
 
-void AProjectile::ShootInDirection(const FVector& ShootDirection)
+void AProjectile::ShootInDirection(const FVector& ShootDirection, const uint32 Speed)
 {
+    ProjectileMovementComponent->InitialSpeed = Speed;
+    ProjectileMovementComponent->MaxSpeed = Speed;
 	ProjectileMovementComponent->Velocity = ShootDirection * ProjectileMovementComponent->InitialSpeed;
 }

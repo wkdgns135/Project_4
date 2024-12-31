@@ -37,6 +37,6 @@ public:
     UFUNCTION()
     void OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit);
 
-	void ShootInDirection(const FVector& ShootDirection);
+	void ShootInDirection(const FVector& ShootDirection, const uint32 Speed);
 };
 

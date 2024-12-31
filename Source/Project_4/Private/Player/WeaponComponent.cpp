@@ -93,7 +93,7 @@ void UWeaponComponent::FireWeapon()
     AProjectile* Projectile = GetWorld()->SpawnActor<AProjectile>(AProjectile::StaticClass(), MuzzleLocation, ShootDirection.Rotation(), SpawnParams);
     if (Projectile)
     {
-        Projectile->ShootInDirection(ShootDirection);
+        Projectile->ShootInDirection(ShootDirection, WeaponData->ProjectileSpeed);
     }
     
     // 카메라 쉐이크 적용
