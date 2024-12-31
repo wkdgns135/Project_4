@@ -5,13 +5,13 @@
 
 UUiCameraShake::UUiCameraShake() {
     // 카메라 쉐이크 설정
-    OscillationDuration = 0.25f;
+    OscillationDuration = 0.1f;
     OscillationBlendInTime = 0.05f;
     OscillationBlendOutTime = 0.05f;
 
-    RotOscillation.Pitch.Amplitude = FMath::RandRange(1.0f, 2.0f);
-    RotOscillation.Pitch.Frequency = FMath::RandRange(25.0f, 35.0f);
+    RotOscillation.Pitch.Amplitude = 1.0f;
+    RotOscillation.Pitch.Frequency = 25.0f;
 
-    RotOscillation.Yaw.Amplitude = FMath::RandRange(1.0f, 2.0f);
-    RotOscillation.Yaw.Frequency = FMath::RandRange(25.0f, 35.0f);
+    RotOscillation.Yaw.Amplitude = 1.0f;
+    RotOscillation.Yaw.Frequency = 25.0f;
 }

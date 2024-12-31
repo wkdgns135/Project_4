@@ -1,6 +1,5 @@
 // Fill out your copyright notice in the Description page of Project Settings.
-
-#include "Player/ShootingComponent.h"
+#include "Player/WeaponComponent.h"
 #include "Engine/World.h"
 #include "GameFramework/Actor.h"
 #include "DrawDebugHelpers.h"
@@ -12,18 +11,18 @@
 #include "Player/Ui/UiCameraShake.h"
 
 // Sets default values for this component's properties
-UShootingComponent::UShootingComponent()
+UWeaponComponent::UWeaponComponent()
 {
-	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
-	// off to improve performance if you don't need them.
-	PrimaryComponentTick.bCanEverTick = true;
+    // Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
+    // off to improve performance if you don't need them.
+    PrimaryComponentTick.bCanEverTick = true;
 }
 
 
 // Called when the game starts
-void UShootingComponent::BeginPlay()
+void UWeaponComponent::BeginPlay()
 {
-	Super::BeginPlay();
+    Super::BeginPlay();
 
     ACharacter* OwnerCharacter = Cast<ACharacter>(GetOwner());
     if (OwnerCharacter)
@@ -31,18 +30,19 @@ void UShootingComponent::BeginPlay()
         SkeletalMeshComponent = OwnerCharacter->GetMesh();
         UiComponent = OwnerCharacter->FindComponentByClass<UUiComponent>();
     }
+
 }
 
 
 // Called every frame
-void UShootingComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+void UWeaponComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+    Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	// ...
+    // ...
 }
 
-void UShootingComponent::Shooting()
+void UWeaponComponent::FireWeapon()
 {
     if (!SkeletalMeshComponent || !UiComponent) return;
     // 머즐 위치 가져오기
@@ -95,18 +95,16 @@ void UShootingComponent::Shooting()
     {
         Projectile->ShootInDirection(ShootDirection);
     }
-
+    
     // 카메라 쉐이크 적용
     APlayerController* PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
     if (PlayerController)
     {
-        PlayerController->ClientStartCameraShake(UUiCameraShake::StaticClass());
+        PlayerController->ClientStartCameraShake(UUiCameraShake::StaticClass(), WeaponData->Recoil);
+
     }
 
     // 디버그용 레이캐스트 시각화
     FVector DebugEnd = MuzzleLocation + (ShootDirection * 10000); // 레이캐스트 길이 설정
     DrawDebugLine(GetWorld(), MuzzleLocation, DebugEnd, FColor::Red, false, 1, 0, 1);
 }
-
-
-
