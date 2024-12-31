@@ -1,6 +1,5 @@
 #include "CPP_Enemy_FSM.h"
 
-
 UCPP_Enemy_FSM::UCPP_Enemy_FSM()
 {
 	PrimaryComponentTick.bCanEverTick = true;
@@ -25,7 +24,7 @@ void UCPP_Enemy_FSM::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 
 	currentTime += DeltaTime;
 
-	switch (mState)
+	switch (eState)
 	{
 	case EEnemyState::IDLE:
 		IdleAction();
@@ -77,7 +76,7 @@ void UCPP_Enemy_FSM::MoveAction(float DeltaTime)
 
 		if (Direction.Size() <= attackRange)
 		{
-			mState = EEnemyState::ATTACK;
+			eState = EEnemyState::ATTACK;
 		}
 		else
 		{
@@ -104,7 +103,7 @@ void UCPP_Enemy_FSM::AttackAction(float DeltaTime)
 		}
 		else
 		{
-			mState = EEnemyState::MOVE;
+			eState = EEnemyState::MOVE;
 		}
 	}
 }
@@ -113,7 +112,7 @@ void UCPP_Enemy_FSM::HitAction()
 {
 	currentTime = 0;
 
-	if (currentTime > hitDelayTime) mState = EEnemyState::MOVE;
+	if (currentTime > hitDelayTime) eState = EEnemyState::MOVE;
 }
 
 void UCPP_Enemy_FSM::DieAction()
@@ -124,28 +123,28 @@ void UCPP_Enemy_FSM::DieAction()
 
 void UCPP_Enemy_FSM::SetIdleState()
 {
-	mState = EEnemyState::IDLE;
+	eState = EEnemyState::IDLE;
 }
 
 void UCPP_Enemy_FSM::SetMoveState(float spd, float range)
 {
 	moveSpeed = spd;
 	attackRange = range;
-	mState = EEnemyState::MOVE;
+	eState = EEnemyState::MOVE;
 }
 
 void UCPP_Enemy_FSM::SetAttackState()
 {
-	mState = EEnemyState::ATTACK;
+	eState = EEnemyState::ATTACK;
 }
 
 void UCPP_Enemy_FSM::SetHitState()
 {
-	mState = EEnemyState::HIT;
+	eState = EEnemyState::HIT;
 }
 
 void UCPP_Enemy_FSM::SetDieState()
 {
-	mState = EEnemyState::DIE;
+	eState = EEnemyState::DIE;
 }
 

@@ -1,7 +1,5 @@
 #pragma once
-
-//#include "CPP_Enemy.h"
-#include "CPP_DetonateEnemy.h"
+#include "CPP_Enemy.h"
 #include "CPP_TestPlayer.h"
 #include <Kismet/GameplayStatics.h>
 #include "CoreMinimal.h"
@@ -34,7 +32,7 @@ public:
 
 public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = FSM)
-	EEnemyState mState = EEnemyState::IDLE;
+	EEnemyState eState = EEnemyState::IDLE;
 
 	UPROPERTY(VisibleAnywhere, Category = FSM)
 	TObjectPtr<class ACPP_TestPlayer> target;
