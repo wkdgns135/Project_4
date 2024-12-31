@@ -19,7 +19,6 @@ public:
 	// Sets default values for this component's properties
 	UUiComponent();
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
@@ -29,4 +28,9 @@ private:
 	void UpdateCrosshair(float DeltaTime);
 
 	float AimSize;
+	float MaxAimSize;
+	float MinAimSize;
+
+public:
+	float GetAimSize() const { return AimSize; }
 };

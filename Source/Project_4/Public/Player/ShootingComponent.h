@@ -4,6 +4,7 @@
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
 #include "Components/SkeletalMeshComponent.h"
+#include "Player/Ui/UiComponent.h"
 #include "ShootingComponent.generated.h"
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
@@ -17,11 +18,13 @@ protected:
 
 public:	
 	UShootingComponent();
-	UPROPERTY(EditAnywhere, Category = Spawn, Meta = (AllowPrivateAccess = "true"))
-	TSubclassOf<class AActor> ProjectileBp;
 
 	UFUNCTION(BlueprintCallable, Category = "Shooting")
 	void Shooting();
 
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+
+private:
+	USkeletalMeshComponent* SkeletalMeshComponent;
+	UUiComponent* UiComponent;
 };

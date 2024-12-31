@@ -9,6 +9,12 @@
 UUiComponent::UUiComponent()
 {
 	PrimaryComponentTick.bCanEverTick = true;
+
+	CrosshairWidgetClass = nullptr;
+	CrosshairWidget = nullptr;
+	AimSize = 0;
+	MaxAimSize = 500;
+	MinAimSize = 0;
 }
 
 
@@ -50,7 +56,6 @@ void UUiComponent::UpdateCrosshair(float DeltaTime)
         bool IsJumping = Cast<ACharacter>(Owner)->GetCharacterMovement()->IsFalling();
         
         if (IsJumping) {
-            UE_LOG(LogTemp, Display, TEXT("JUMP"));
             AimSize += 2000.f * DeltaTime; // 빠르게 증가
         }
         else {
@@ -68,7 +73,7 @@ void UUiComponent::UpdateCrosshair(float DeltaTime)
             }
         }
         // 최소 크기 제한
-        AimSize = FMath::Max(AimSize, 0.0f);
+        AimSize = FMath::Clamp(AimSize, MinAimSize, MaxAimSize);
 
         // Assume the widget has a method or variable to adjust size
         UFunction* UpdateSizeFunction = CrosshairWidget->FindFunction(FName("UpdateCrosshairSize"));

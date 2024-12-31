@@ -8,6 +8,8 @@
 #include "Camera/CameraComponent.h"
 #include "GameFramework/Character.h"
 #include "Player/Projectile.h"
+#include <Player/Ui/UiComponent.h>
+#include "Player/Ui/UiCameraShake.h"
 
 // Sets default values for this component's properties
 UShootingComponent::UShootingComponent()
@@ -23,8 +25,12 @@ void UShootingComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// ...
-	
+    ACharacter* OwnerCharacter = Cast<ACharacter>(GetOwner());
+    if (OwnerCharacter)
+    {
+        SkeletalMeshComponent = OwnerCharacter->GetMesh();
+        UiComponent = OwnerCharacter->FindComponentByClass<UUiComponent>();
+    }
 }
 
 
@@ -38,13 +44,11 @@ void UShootingComponent::TickComponent(float DeltaTime, ELevelTick TickType, FAc
 
 void UShootingComponent::Shooting()
 {
-    USkeletalMeshComponent* SkeletalMeshComponent;
-    ACharacter* OwnerCharacter = Cast<ACharacter>(GetOwner());
-    SkeletalMeshComponent = OwnerCharacter->GetMesh();
-
+    if (!SkeletalMeshComponent || !UiComponent) return;
     // 머즐 위치 가져오기
     FTransform SocketTransform = SkeletalMeshComponent->GetSocketTransform("Muzzle", RTS_World); // 월드 좌표계 사용
     FVector MuzzleLocation = SocketTransform.GetLocation();
+    FRotator MuzzleRotation = SocketTransform.GetRotation().Rotator();
 
     // 화면 중심 가져오기
     FVector2D ViewportSize;
@@ -57,7 +61,7 @@ void UShootingComponent::Shooting()
     UGameplayStatics::DeprojectScreenToWorld(UGameplayStatics::GetPlayerController(GetWorld(), 0), ScreenCenter, WorldLocation, WorldDirection);
 
     // 레이캐스트 시작 위치와 끝 위치 설정
-    FVector Start = MuzzleLocation;
+    FVector Start = WorldLocation;
     FVector End = Start + (WorldDirection * 10000); // 레이캐스트 길이 설정
 
     // 레이캐스트 충돌 결과 저장할 변수
@@ -79,20 +83,30 @@ void UShootingComponent::Shooting()
     // 발사체 발사 방향 설정
     FVector ShootDirection = (HitLocation - MuzzleLocation).GetSafeNormal();
 
-    // 발사체 생성 및 발사 (예시 코드, 실제 발사체 클래스와 스폰 방식에 따라 다를 수 있음)
+    // AimSize에 비례한 랜덤 오프셋 추가
+    float AimSize = UiComponent->GetAimSize();
+    float RandomConeHalfAngle = FMath::DegreesToRadians(AimSize / 100.0f); // AimSize에 비례한 각도 설정
+    ShootDirection = FMath::VRandCone(ShootDirection, RandomConeHalfAngle);
+
+    // 발사체 생성 및 발사
     FActorSpawnParameters SpawnParams;
-    AActor* Projectile = GetWorld()->SpawnActor<AActor>(ProjectileBp, MuzzleLocation, ShootDirection.Rotation(), SpawnParams);
+    AProjectile* Projectile = GetWorld()->SpawnActor<AProjectile>(AProjectile::StaticClass(), MuzzleLocation, ShootDirection.Rotation(), SpawnParams);
     if (Projectile)
     {
-        // 발사체에 초기 속도 설정 (예시 코드, 실제 발사체 클래스에 따라 다를 수 있음)
-        UProjectileMovementComponent* ProjectileMovement = Projectile->FindComponentByClass<UProjectileMovementComponent>();
-        if (ProjectileMovement)
-        {
-            ProjectileMovement->Velocity = ShootDirection * ProjectileMovement->InitialSpeed;
-        }
+        Projectile->ShootInDirection(ShootDirection);
+    }
+
+    // 카메라 쉐이크 적용
+    APlayerController* PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+    if (PlayerController)
+    {
+        PlayerController->ClientStartCameraShake(UUiCameraShake::StaticClass());
     }
 
     // 디버그용 레이캐스트 시각화
-    DrawDebugLine(GetWorld(), Start, End, FColor::Red, false, 1, 0, 1);
+    FVector DebugEnd = MuzzleLocation + (ShootDirection * 10000); // 레이캐스트 길이 설정
+    DrawDebugLine(GetWorld(), MuzzleLocation, DebugEnd, FColor::Red, false, 1, 0, 1);
 }
+
+
 
