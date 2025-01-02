@@ -44,6 +44,9 @@ public:
 	UPROPERTY(EditAnywhere)
 	float attackRange;
 
+	UPROPERTY(EditAnywhere)
+	float sightRange;
+
 protected:
 	virtual void BeginPlay() override;
 

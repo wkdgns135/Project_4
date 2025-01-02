@@ -138,6 +138,12 @@ void UEnemy_FSM::DieAction()
 	//enemy->Destroy();
 }
 
+void UEnemy_FSM::SetEnemyType(EEnemyType enemyType)
+{
+	eType = enemyType;
+	aiController->SetType(eType);
+}
+
 void UEnemy_FSM::SetIdleState()
 {
 	eState = EEnemyState::IDLE;

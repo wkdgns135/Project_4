@@ -8,18 +8,6 @@
 #include "Components/ActorComponent.h"
 #include "Enemy_FSM.generated.h"
 
-/*
-UENUM(BlueprintType)
-enum class EEnemyState : uint8
-{
-	IDLE,
-	MOVE,
-	ATTACK,
-	HIT,
-	DIE
-};
-*/
-
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class PROJECT_4_API UEnemy_FSM : public UActorComponent
 {
@@ -30,6 +18,9 @@ public:
 
 	UPROPERTY(visibleAnywhere, BlueprintReadOnly, Category = "FSM")
 	EEnemyState eState = EEnemyState::IDLE;
+
+	UPROPERTY(visibleAnywhere, BlueprintReadOnly, Category = "FSM")
+	EEnemyType eType = EEnemyType::GUARD;
 
 	UPROPERTY(visibleAnywhere, Category = "FSM")
 	TObjectPtr<class ATest_Player> player;
@@ -48,6 +39,8 @@ public:
 	void SetAttackState();
 	void SetHitState();
 	void SetDieState();
+
+	void SetEnemyType(EEnemyType enemyType);
 
 	FVector SetTargetFocus();
 

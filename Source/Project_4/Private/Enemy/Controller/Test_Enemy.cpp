@@ -21,9 +21,11 @@ void ATest_Enemy::BeginPlay()
 	strength = 10;
 	speed = 30.0f;
 	attackRange = 500.0f;
+	sightRange = 1000.0f;
 	currentHp = maxHp;
 
 	if (fsm && fsm->player) Movement();
+	fsm->SetEnemyType(EEnemyType::GUARD);
 }
 
 // Called every frame

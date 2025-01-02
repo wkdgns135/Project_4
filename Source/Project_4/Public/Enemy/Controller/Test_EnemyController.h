@@ -7,6 +7,15 @@
 #include "Test_EnemyController.generated.h"
 
 UENUM(BlueprintType)
+enum class EEnemyType : uint8
+{
+	GUARD = 0 UMETA(DisplayName = "type_guard"),
+	EXPLOSION UMETA(DisplayName = "type_explosion"),
+	STANDOFF UMETA(DisplayName = "type_standOff"),
+	NEAR UMETA(DisplayName = "type_near")
+};
+
+UENUM(BlueprintType)
 enum class EEnemyState : uint8
 {
 	IDLE = 0 UMETA(DisplayName = "IDLE"),
@@ -28,6 +37,7 @@ class PROJECT_4_API ATest_EnemyController : public AAIController
 	static const FName Key_isDead;
 	static const FName Key_isHit;
 	static const FName Key_eState;
+	static const FName Key_eType;
 
 public:
 	ATest_EnemyController();
@@ -36,10 +46,13 @@ public:
 	void OnPossess(APawn* pawn) override;
 
 	void SetState(EEnemyState eState);
+	void SetType(EEnemyType eType);
 
 	//EEnemyState eState = EEnemyState::IDLE;
 
 private:
 	UPROPERTY(VisibleAnywhere, Category = "Enemy")
 	TObjectPtr<class UBehaviorTree> bt_asset;
+
+	UBlackboardComponent* blackBoard;
 };
