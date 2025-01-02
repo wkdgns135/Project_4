@@ -24,24 +24,28 @@ protected:
 	virtual void BeginPlay() override;
 
 
+public:
+    virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+
+    UFUNCTION(BlueprintCallable, Category = "Weapon")
+    void FireWeapon();
+
+    UFUNCTION(BlueprintCallable, Category = "Weapon")
+    void ReloadWeapon();
+
 private:
-	USkeletalMeshComponent* SkeletalMeshComponent;
-	UUiComponent* UiComponent;
+    void GetMuzzleLocationAndRotation(FVector& OutLocation, FRotator& OutRotation) const;
+    void GetScreenCenterWorldLocationAndDirection(FVector& OutWorldLocation, FVector& OutWorldDirection) const;
+    bool PerformLineTrace(const FVector& Start, const FVector& End, FHitResult& OutHitResult) const;
+    FVector CalculateShootDirection(const FVector& MuzzleLocation, const FVector& HitLocation) const;
+    void SpawnProjectile(const FVector& MuzzleLocation, const FVector& ShootDirection);
+    void ApplyCameraShake() const;
 
-	uint32 CurrentAmmoCount;
+    USkeletalMeshComponent* SkeletalMeshComponent;
+    UUiComponent* UiComponent;
+    UPROPERTY(EditAnywhere, Category = "Weapon")
+    UWeaponData* WeaponData;
 
-public:	
-	// Called every frame
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon")
-	UWeaponData *WeaponData;
-
-
-	UFUNCTION(BlueprintCallable, Category = "Fire") // For debug
-	void FireWeapon();
-	void ReloadWeapon();
-	void EquipWeapon();
-
-	uint32 GetCurrentAmmoCount() { return CurrentAmmoCount; }
+    int32 CurrentAmmoCount;
+    bool IsShooting;
 };

@@ -35,4 +35,5 @@ private:
 
 public:
 	float GetAimSize() const { return AimSize; }
+	void SetAimSize(float Size) { AimSize = Size; }
 };

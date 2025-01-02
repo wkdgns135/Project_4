@@ -31,8 +31,8 @@ void UWeaponComponent::BeginPlay()
         UiComponent = OwnerCharacter->FindComponentByClass<UUiComponent>();
     }
 
-
     CurrentAmmoCount = WeaponData->AmmoCount;
+    IsShooting = false;
 }
 
 
@@ -44,72 +44,86 @@ void UWeaponComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActo
     // ...
 }
 
-void UWeaponComponent::FireWeapon()
-{
-    if (CurrentAmmoCount == 0)return;
-    if (!SkeletalMeshComponent || !UiComponent) return;
-    // 머즐 위치 가져오기
-    FTransform SocketTransform = SkeletalMeshComponent->GetSocketTransform("Muzzle", RTS_World); // 월드 좌표계 사용
-    FVector MuzzleLocation = SocketTransform.GetLocation();
-    FRotator MuzzleRotation = SocketTransform.GetRotation().Rotator();
 
-    // 화면 중심 가져오기
+
+void UWeaponComponent::GetMuzzleLocationAndRotation(FVector& OutLocation, FRotator& OutRotation) const
+{
+    FTransform SocketTransform = SkeletalMeshComponent->GetSocketTransform("Muzzle", RTS_World);
+    OutLocation = SocketTransform.GetLocation();
+    OutRotation = SocketTransform.GetRotation().Rotator();
+}
+
+void UWeaponComponent::GetScreenCenterWorldLocationAndDirection(FVector& OutWorldLocation, FVector& OutWorldDirection) const
+{
     FVector2D ViewportSize;
     GEngine->GameViewport->GetViewportSize(ViewportSize);
     FVector2D ScreenCenter(ViewportSize.X / 2, ViewportSize.Y / 2);
+    UGameplayStatics::DeprojectScreenToWorld(UGameplayStatics::GetPlayerController(GetWorld(), 0), ScreenCenter, OutWorldLocation, OutWorldDirection);
+}
 
-    // 화면 중심에서 월드 위치와 방향 가져오기
-    FVector WorldLocation;
-    FVector WorldDirection;
-    UGameplayStatics::DeprojectScreenToWorld(UGameplayStatics::GetPlayerController(GetWorld(), 0), ScreenCenter, WorldLocation, WorldDirection);
+bool UWeaponComponent::PerformLineTrace(const FVector& Start, const FVector& End, FHitResult& OutHitResult) const
+{
+    return GetWorld()->LineTraceSingleByChannel(OutHitResult, Start, End, ECC_Visibility);
+}
 
-    // 레이캐스트 시작 위치와 끝 위치 설정
-    FVector Start = WorldLocation;
-    FVector End = Start + (WorldDirection * 10000); // 레이캐스트 길이 설정
-
-    // 레이캐스트 충돌 결과 저장할 변수
-    FHitResult HitResult;
-
-    // 레이캐스트 실행
-    FVector HitLocation;
-    if (GetWorld()->LineTraceSingleByChannel(HitResult, Start, End, ECC_Visibility))
-    {
-        // 충돌한 위치 가져오기
-        HitLocation = HitResult.Location;
-    }
-    else
-    {
-        // 충돌하지 않았을 경우, 레이의 끝 위치를 사용
-        HitLocation = End;
-    }
-
-    // 발사체 발사 방향 설정
+FVector UWeaponComponent::CalculateShootDirection(const FVector& MuzzleLocation, const FVector& HitLocation) const
+{
     FVector ShootDirection = (HitLocation - MuzzleLocation).GetSafeNormal();
-
-    // AimSize에 비례한 랜덤 오프셋 추가
     float AimSize = UiComponent->GetAimSize();
-    float RandomConeHalfAngle = FMath::DegreesToRadians(AimSize / 100.0f); // AimSize에 비례한 각도 설정
-    ShootDirection = FMath::VRandCone(ShootDirection, RandomConeHalfAngle);
+    float RandomConeHalfAngle = FMath::DegreesToRadians(AimSize / 100.0f);
+    return FMath::VRandCone(ShootDirection, RandomConeHalfAngle);
+}
 
-    // 발사체 생성 및 발사
+void UWeaponComponent::SpawnProjectile(const FVector& MuzzleLocation, const FVector& ShootDirection)
+{
     FActorSpawnParameters SpawnParams;
     AProjectile* Projectile = GetWorld()->SpawnActor<AProjectile>(AProjectile::StaticClass(), MuzzleLocation, ShootDirection.Rotation(), SpawnParams);
     if (Projectile)
     {
         Projectile->ShootInDirection(ShootDirection, WeaponData->ProjectileSpeed);
     }
-    
-    // 카메라 쉐이크 적용
+}
+
+void UWeaponComponent::ApplyCameraShake() const
+{
     APlayerController* PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
     if (PlayerController)
     {
         PlayerController->ClientStartCameraShake(UUiCameraShake::StaticClass(), WeaponData->Recoil);
+    }
+}
 
+void UWeaponComponent::FireWeapon()
+{
+    if (CurrentAmmoCount == 0 || !SkeletalMeshComponent || !UiComponent) return;
+    IsShooting = true;
+
+    FVector MuzzleLocation;
+    FRotator MuzzleRotation;
+    GetMuzzleLocationAndRotation(MuzzleLocation, MuzzleRotation);
+
+    FVector WorldLocation;
+    FVector WorldDirection;
+    GetScreenCenterWorldLocationAndDirection(WorldLocation, WorldDirection);
+
+    FVector Start = WorldLocation;
+    FVector End = Start + (WorldDirection * 10000);
+
+    FHitResult HitResult;
+    FVector HitLocation = End;
+    if (PerformLineTrace(Start, End, HitResult))
+    {
+        HitLocation = HitResult.Location;
     }
 
-    // 디버그용 레이캐스트 시각화
-    FVector DebugEnd = MuzzleLocation + (ShootDirection * 10000); // 레이캐스트 길이 설정
-    DrawDebugLine(GetWorld(), MuzzleLocation, DebugEnd, FColor::Red, false, 1, 0, 1);
+    FVector ShootDirection = CalculateShootDirection(MuzzleLocation, HitLocation);
+    SpawnProjectile(MuzzleLocation, ShootDirection);
+    ApplyCameraShake();
 
     CurrentAmmoCount--;
+}
+
+void UWeaponComponent::ReloadWeapon()
+{
+    CurrentAmmoCount = WeaponData->AmmoCount;
 }
