@@ -1,6 +1,7 @@
 #include "Enemy/Controller/Test_EnemyController.h"
 #include "BehaviorTree/BehaviorTree.h"
 #include "BehaviorTree/BlackboardComponent.h"
+#include "NavigationSystem.h"
 #include "Enemy/Controller/Enemy_FSM.h"
 
 const FName ATest_EnemyController::Key_TargetPlayer = TEXT("TargetPlayer");

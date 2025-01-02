@@ -4,7 +4,6 @@
 UEnemy_FSM::UEnemy_FSM()
 {
 	PrimaryComponentTick.bCanEverTick = true;
-
 }
 
 
@@ -71,59 +70,56 @@ FVector UEnemy_FSM::SetTargetFocus()
 
 void UEnemy_FSM::IdleAction()
 {
-	//Idle이 아니라 패트롤 구현이 필요함.
-	//aiController->SetStateIdle();
+	//패트롤 구현이 필요함.
+
+	if (player && enemy)
+	{
+		if (SetTargetFocus().Size() <= sightRange)
+		{
+			SetMoveState();
+		}
+	}
 }
 
 void UEnemy_FSM::MoveAction(float DeltaTime)
 {
-	//aiController->SetStateMove();
-	/*
 	if (player && enemy)
 	{
 		FVector Direction = SetTargetFocus();
 
 		if (Direction.Size() <= attackRange)
 		{
-			eState = EEnemyState::ATTACK;
+			SetAttackState();
 		}
 		else
 		{
 			enemy->AddMovementInput(Direction.GetSafeNormal() * DeltaTime * moveSpeed);
 		}
 	}
-	*/
+	
 }
 
 void UEnemy_FSM::AttackAction(float DeltaTime)
 {
-	//aiController->SetStateAttack();
-	/*
 	if (player && enemy)
 	{
 		FVector Direction = SetTargetFocus();
 
-		if (Direction.Size() <= 100)
+		if (Direction.Size() <= attackRange)
 		{
-			UE_LOG(LogTemp, Warning, TEXT("Attack!"));
+			//UE_LOG(LogTemp, Warning, TEXT("Attack!"));
 			enemy->AddMovementInput(Direction.GetSafeNormal() * DeltaTime * moveSpeed * 2.0f);
-		}
-		else if (Direction.Size() <= attackRange)
-		{
-			UE_LOG(LogTemp, Warning, TEXT("Attack State!"));
-			enemy->AddMovementInput(Direction.GetSafeNormal() * DeltaTime * moveSpeed * 1.5f);
 		}
 		else
 		{
-			eState = EEnemyState::MOVE;
+			SetMoveState();
 		}
 	}
-	*/
 }
 
 void UEnemy_FSM::HitAction()
 {
-	//aiController->SetStateHit();
+	SetHitState();
 	/*
 	currentTime = 0;
 
@@ -133,7 +129,7 @@ void UEnemy_FSM::HitAction()
 
 void UEnemy_FSM::DieAction()
 {
-	//aiController->SetStateDie();
+	SetDieState();
 	//enemy->DropItem();
 	//enemy->Destroy();
 }
@@ -144,16 +140,21 @@ void UEnemy_FSM::SetEnemyType(EEnemyType enemyType)
 	aiController->SetType(eType);
 }
 
+void UEnemy_FSM::SetEnemyStatus(float sightR, float spd, float range)
+{
+	moveSpeed = spd;
+	attackRange = range;
+	sightRange = sightR;
+}
+
 void UEnemy_FSM::SetIdleState()
 {
 	eState = EEnemyState::IDLE;
 	aiController->SetState(eState);
 }
 
-void UEnemy_FSM::SetMoveState(float spd, float range)
+void UEnemy_FSM::SetMoveState()
 {
-	moveSpeed = spd;
-	attackRange = range;
 	eState = EEnemyState::MOVE;
 	aiController->SetState(eState);
 }

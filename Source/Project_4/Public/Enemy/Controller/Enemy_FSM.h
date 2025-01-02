@@ -35,13 +35,13 @@ public:
 	void DieAction();
 
 	void SetIdleState();
-	void SetMoveState(float spd, float range);
+	void SetMoveState();
 	void SetAttackState();
 	void SetHitState();
 	void SetDieState();
 
 	void SetEnemyType(EEnemyType enemyType);
-
+	void SetEnemyStatus(float sightR, float spd, float range);
 	FVector SetTargetFocus();
 
 protected:
@@ -52,6 +52,7 @@ public:
 
 private:
 	float moveSpeed;
+	float sightRange;
 	float attackRange;
 	float hitDelayTime;
 	float currentTime;

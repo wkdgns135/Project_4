@@ -10,6 +10,13 @@ ATest_Enemy::ATest_Enemy()
 	PrimaryActorTick.bCanEverTick = true;
 
 	fsm = CreateDefaultSubobject<UEnemy_FSM>(TEXT("FSM"));
+
+	maxHp = 100;
+	strength = 10;
+	speed = 30.0f;
+	attackRange = 500.0f;
+	sightRange = 1000.0f;
+	currentHp = maxHp;
 }
 
 // Called when the game starts or when spawned
@@ -17,27 +24,25 @@ void ATest_Enemy::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	maxHp = 100;
-	strength = 10;
-	speed = 30.0f;
-	attackRange = 500.0f;
-	sightRange = 1000.0f;
-	currentHp = maxHp;
-
-	if (fsm && fsm->player) Movement();
-	fsm->SetEnemyType(EEnemyType::GUARD);
+	//if (fsm && fsm->player) Movement();
+	//fsm->SetEnemyType(EEnemyType::GUARD);
+	//if (fsm) fsm->SetEnemyStatus(sightRange, speed, attackRange);
 }
 
 // Called every frame
 void ATest_Enemy::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+}
 
+void ATest_Enemy::Idle()
+{
+	if (fsm) fsm->SetIdleState();
 }
 
 void ATest_Enemy::Movement()
 {
-	if (fsm) fsm->SetMoveState(speed, attackRange);
+	if (fsm) fsm->SetMoveState();
 }
 
 void ATest_Enemy::Attack()

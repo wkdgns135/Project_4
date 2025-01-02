@@ -15,6 +15,7 @@ class PROJECT_4_API ATest_Enemy : public ACharacter
 public:
 	ATest_Enemy();
 
+	virtual void Idle();
 	virtual void Movement();
 	virtual void Attack();
 	virtual void GetHit(int32 damage, AActor* byWho);
@@ -32,19 +33,19 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = FSMComponent)
 	TObjectPtr<class UEnemy_FSM> fsm;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(VisibleAnywhere, Category = "Enemy")
 	int32 maxHp;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(VisibleAnywhere, Category = "Enemy")
 	float speed;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(VisibleAnywhere, Category = "Enemy")
 	int32 strength;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(VisibleAnywhere, Category = "Enemy")
 	float attackRange;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(VisibleAnywhere, Category = "Enemy")
 	float sightRange;
 
 protected:
