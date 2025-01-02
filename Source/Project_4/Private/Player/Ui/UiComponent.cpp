@@ -9,8 +9,6 @@
 UUiComponent::UUiComponent()
 {
 	PrimaryComponentTick.bCanEverTick = true;
-
-	CrosshairWidgetClass = nullptr;
 	CrosshairWidget = nullptr;
 	AimSize = 0;
 	MaxAimSize = 500;
@@ -22,14 +20,10 @@ UUiComponent::UUiComponent()
 void UUiComponent::BeginPlay()
 {
 	Super::BeginPlay();
-	if (CrosshairWidgetClass)
-	{
-		CrosshairWidget = CreateWidget<UUserWidget>(GetWorld(), CrosshairWidgetClass);
-		if (CrosshairWidget)
-		{
-			CrosshairWidget->AddToViewport();
-		}
-	}
+
+    if (CrosshairWidget) {
+        CrosshairWidget->AddToViewport();
+    }
 }
 
 
@@ -44,13 +38,14 @@ void UUiComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorCom
 void UUiComponent::UpdateCrosshair(float DeltaTime)
 {
     if (!CrosshairWidget) return;
-
     // Example: Update crosshair based on actor's velocity
     AActor* Owner = GetOwner();
     if (Owner)
     {
         FVector Velocity = Owner->GetVelocity();
         float Speed = Velocity.Size();
+        if (Speed == 0 && AimSize == 0)return; // 불필요한 계산 최적화
+
         bool IsJumping = Cast<ACharacter>(Owner)->GetCharacterMovement()->IsFalling();
         
         if (IsJumping) {
@@ -72,19 +67,6 @@ void UUiComponent::UpdateCrosshair(float DeltaTime)
         }
         // 최소 크기 제한
         AimSize = FMath::Clamp(AimSize, MinAimSize, MaxAimSize);
-
-        // Assume the widget has a method or variable to adjust size
-        UFunction* UpdateSizeFunction = CrosshairWidget->FindFunction(FName("UpdateCrosshairSize"));
-        if (UpdateSizeFunction)
-        {
-            struct FUpdateParams
-            {
-                float NewSize;
-            };
-
-            FUpdateParams Params;
-            Params.NewSize = AimSize;
-            CrosshairWidget->ProcessEvent(UpdateSizeFunction, &Params);
-        }
+        CrosshairWidget->UpdateCrosshairSize(AimSize);
     }
 }

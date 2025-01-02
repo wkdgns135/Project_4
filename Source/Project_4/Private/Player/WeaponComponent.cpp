@@ -31,6 +31,8 @@ void UWeaponComponent::BeginPlay()
         UiComponent = OwnerCharacter->FindComponentByClass<UUiComponent>();
     }
 
+
+    CurrentAmmoCount = WeaponData->AmmoCount;
 }
 
 
@@ -44,6 +46,7 @@ void UWeaponComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 
 void UWeaponComponent::FireWeapon()
 {
+    if (CurrentAmmoCount == 0)return;
     if (!SkeletalMeshComponent || !UiComponent) return;
     // 머즐 위치 가져오기
     FTransform SocketTransform = SkeletalMeshComponent->GetSocketTransform("Muzzle", RTS_World); // 월드 좌표계 사용
@@ -107,4 +110,6 @@ void UWeaponComponent::FireWeapon()
     // 디버그용 레이캐스트 시각화
     FVector DebugEnd = MuzzleLocation + (ShootDirection * 10000); // 레이캐스트 길이 설정
     DrawDebugLine(GetWorld(), MuzzleLocation, DebugEnd, FColor::Red, false, 1, 0, 1);
+
+    CurrentAmmoCount--;
 }

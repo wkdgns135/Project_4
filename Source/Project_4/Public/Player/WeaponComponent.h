@@ -28,6 +28,8 @@ private:
 	USkeletalMeshComponent* SkeletalMeshComponent;
 	UUiComponent* UiComponent;
 
+	uint32 CurrentAmmoCount;
+
 public:	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
@@ -38,6 +40,8 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Fire") // For debug
 	void FireWeapon();
-
+	void ReloadWeapon();
 	void EquipWeapon();
+
+	uint32 GetCurrentAmmoCount() { return CurrentAmmoCount; }
 };
