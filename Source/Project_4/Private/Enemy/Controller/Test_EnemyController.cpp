@@ -1,6 +1,7 @@
 #include "Enemy/Controller/Test_EnemyController.h"
 #include "BehaviorTree/BehaviorTree.h"
 #include "BehaviorTree/BlackboardComponent.h"
+#include "Enemy/Controller/Enemy_FSM.h"
 
 const FName ATest_EnemyController::Key_TargetPlayer = TEXT("TargetPlayer");
 const FName ATest_EnemyController::Key_SitePosition = TEXT("SitePosition");
@@ -8,6 +9,7 @@ const FName ATest_EnemyController::Key_isLineofSight = TEXT("isLineofSight");
 const FName ATest_EnemyController::Key_isInAttackRange = TEXT("isInAttackRange");
 const FName ATest_EnemyController::Key_isDead = TEXT("isDead");
 const FName ATest_EnemyController::Key_isHit = TEXT("isHit");
+const FName ATest_EnemyController::Key_eState = TEXT("eState");
 
 ATest_EnemyController::ATest_EnemyController() {
     static ConstructorHelpers::FObjectFinder<UBehaviorTree> BTObject(TEXT("BehaviorTree'/Game/MyAI/BT_BaseEnemy_Test.BT_BaseEnemy_Test'"));
@@ -24,9 +26,17 @@ void ATest_EnemyController::BeginPlay() {
 
 void ATest_EnemyController::OnPossess(APawn* pawn) {
     Super::OnPossess(pawn);
+
     UBlackboardComponent* blackBoard = Blackboard;
+
     if (UseBlackboard(bt_asset->GetBlackboardAsset(), blackBoard)) {
         RunBehaviorTree(bt_asset);
     }
     //Blackboard->SetValueAsBool(Key_isDead, true);
+}
+
+void ATest_EnemyController::SetState(EEnemyState eState)
+{
+    Blackboard->SetValueAsEnum(Key_eState, (uint8)eState);
+    UE_LOG(LogTemp, Log, TEXT("FSM Call SetState of EnemyController"));
 }

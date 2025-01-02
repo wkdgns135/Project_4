@@ -6,6 +6,16 @@
 #include "AIController.h"
 #include "Test_EnemyController.generated.h"
 
+UENUM(BlueprintType)
+enum class EEnemyState : uint8
+{
+	IDLE = 0 UMETA(DisplayName = "IDLE"),
+	MOVE UMETA(DisplayName = "MOVE"),
+	ATTACK UMETA(DisplayName = "ATTACK"),
+	HIT UMETA(DisplayName = "HIT"),
+	DIE UMETA(DisplayName = "DIE")
+};
+
 UCLASS()
 class PROJECT_4_API ATest_EnemyController : public AAIController
 {
@@ -17,6 +27,7 @@ class PROJECT_4_API ATest_EnemyController : public AAIController
 	static const FName Key_isInAttackRange;
 	static const FName Key_isDead;
 	static const FName Key_isHit;
+	static const FName Key_eState;
 
 public:
 	ATest_EnemyController();
@@ -24,7 +35,11 @@ public:
 	void BeginPlay() override;
 	void OnPossess(APawn* pawn) override;
 
+	void SetState(EEnemyState eState);
+
+	//EEnemyState eState = EEnemyState::IDLE;
+
 private:
-	UPROPERTY(VisibleAnywhere, Category = Enemy)
+	UPROPERTY(VisibleAnywhere, Category = "Enemy")
 	TObjectPtr<class UBehaviorTree> bt_asset;
 };
