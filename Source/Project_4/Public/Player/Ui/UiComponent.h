@@ -6,6 +6,7 @@
 #include "Components/ActorComponent.h"
 #include "Blueprint/UserWidget.h"
 #include "CrosshairWidget.h"
+#include "AmmoWidget.h"
 #include "UiComponent.generated.h"
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
@@ -19,12 +20,22 @@ public:
 	// Sets default values for this component's properties
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-	UPROPERTY(EditAnywhere, Category = "UI")
-	UCrosshairWidget *CrosshairWidget;
-
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
+
+public:
+	float GetAimSize() const { return AimSize; }
+	void SetAimSize(float Size) { AimSize = Size; }
+	void SetAmmoText(const uint32 CurrentAmmoCount, const uint32 AmmoCount);
+
+	UPROPERTY(EditAnywhere, Category = "UI")
+	UCrosshairWidget *CrosshairWidget;
+
+	UPROPERTY(EditAnywhere, Category = "UI")
+	UAmmoWidget* AmmoWidget;
+
+
 
 private:
 	void UpdateCrosshair(float DeltaTime);
@@ -33,7 +44,4 @@ private:
 	float MaxAimSize;
 	float MinAimSize;
 
-public:
-	float GetAimSize() const { return AimSize; }
-	void SetAimSize(float Size) { AimSize = Size; }
 };

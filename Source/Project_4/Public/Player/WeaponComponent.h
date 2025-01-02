@@ -24,20 +24,10 @@ protected:
 	virtual void BeginPlay() override;
 
 
-public:
-    virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-
-    UFUNCTION(BlueprintCallable, Category = "Weapon")
-    void FireWeapon();
-
-    UFUNCTION(BlueprintCallable, Category = "Weapon")
-    void ReloadWeapon();
-
 private:
-    void GetMuzzleLocationAndRotation(FVector& OutLocation, FRotator& OutRotation) const;
-    void GetScreenCenterWorldLocationAndDirection(FVector& OutWorldLocation, FVector& OutWorldDirection) const;
-    bool PerformLineTrace(const FVector& Start, const FVector& End, FHitResult& OutHitResult) const;
+    FVector GetMuzzleLocation() const;
     FVector CalculateShootDirection(const FVector& MuzzleLocation, const FVector& HitLocation) const;
+    void GetScreenCenterWorldLocationAndDirection(FVector& OutWorldLocation, FVector& OutWorldDirection) const;
     void SpawnProjectile(const FVector& MuzzleLocation, const FVector& ShootDirection);
     void ApplyCameraShake() const;
 
@@ -47,5 +37,18 @@ private:
     UWeaponData* WeaponData;
 
     int32 CurrentAmmoCount;
+    int32 AmmoCount;
+    int32 AmmoLimit;
     bool IsShooting;
+
+public:
+    virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+
+    UFUNCTION(BlueprintCallable, Category = "Weapon")
+    void FireWeapon();
+
+    UFUNCTION(BlueprintCallable, Category = "Weapon")
+    void ReloadWeapon();
+
+    void IncreaseAmmo(const uint32 Ammo);
 };

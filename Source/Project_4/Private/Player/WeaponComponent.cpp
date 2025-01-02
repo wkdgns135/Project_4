@@ -18,7 +18,6 @@ UWeaponComponent::UWeaponComponent()
     PrimaryComponentTick.bCanEverTick = true;
 }
 
-
 // Called when the game starts
 void UWeaponComponent::BeginPlay()
 {
@@ -32,6 +31,8 @@ void UWeaponComponent::BeginPlay()
     }
 
     CurrentAmmoCount = WeaponData->AmmoCount;
+    AmmoCount = CurrentAmmoCount * 3;
+    UiComponent->SetAmmoText(CurrentAmmoCount, AmmoCount);
     IsShooting = false;
 }
 
@@ -45,12 +46,10 @@ void UWeaponComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 }
 
 
-
-void UWeaponComponent::GetMuzzleLocationAndRotation(FVector& OutLocation, FRotator& OutRotation) const
+FVector UWeaponComponent::GetMuzzleLocation() const
 {
     FTransform SocketTransform = SkeletalMeshComponent->GetSocketTransform("Muzzle", RTS_World);
-    OutLocation = SocketTransform.GetLocation();
-    OutRotation = SocketTransform.GetRotation().Rotator();
+    return SocketTransform.GetLocation();
 }
 
 void UWeaponComponent::GetScreenCenterWorldLocationAndDirection(FVector& OutWorldLocation, FVector& OutWorldDirection) const
@@ -59,11 +58,6 @@ void UWeaponComponent::GetScreenCenterWorldLocationAndDirection(FVector& OutWorl
     GEngine->GameViewport->GetViewportSize(ViewportSize);
     FVector2D ScreenCenter(ViewportSize.X / 2, ViewportSize.Y / 2);
     UGameplayStatics::DeprojectScreenToWorld(UGameplayStatics::GetPlayerController(GetWorld(), 0), ScreenCenter, OutWorldLocation, OutWorldDirection);
-}
-
-bool UWeaponComponent::PerformLineTrace(const FVector& Start, const FVector& End, FHitResult& OutHitResult) const
-{
-    return GetWorld()->LineTraceSingleByChannel(OutHitResult, Start, End, ECC_Visibility);
 }
 
 FVector UWeaponComponent::CalculateShootDirection(const FVector& MuzzleLocation, const FVector& HitLocation) const
@@ -95,12 +89,10 @@ void UWeaponComponent::ApplyCameraShake() const
 
 void UWeaponComponent::FireWeapon()
 {
+    //TODO: 좌클릭 쭉 누르고 있으면 자동으로 슈팅되도록, 무기 연사속도 반영
+
     if (CurrentAmmoCount == 0 || !SkeletalMeshComponent || !UiComponent) return;
     IsShooting = true;
-
-    FVector MuzzleLocation;
-    FRotator MuzzleRotation;
-    GetMuzzleLocationAndRotation(MuzzleLocation, MuzzleRotation);
 
     FVector WorldLocation;
     FVector WorldDirection;
@@ -111,19 +103,42 @@ void UWeaponComponent::FireWeapon()
 
     FHitResult HitResult;
     FVector HitLocation = End;
-    if (PerformLineTrace(Start, End, HitResult))
+    if (GetWorld()->LineTraceSingleByChannel(HitResult, Start, End, ECC_Visibility))
     {
         HitLocation = HitResult.Location;
     }
 
+    FVector MuzzleLocation = GetMuzzleLocation();
     FVector ShootDirection = CalculateShootDirection(MuzzleLocation, HitLocation);
     SpawnProjectile(MuzzleLocation, ShootDirection);
     ApplyCameraShake();
 
     CurrentAmmoCount--;
+    UiComponent->SetAmmoText(CurrentAmmoCount, AmmoCount);
 }
 
 void UWeaponComponent::ReloadWeapon()
 {
-    CurrentAmmoCount = WeaponData->AmmoCount;
+    /*
+    TODO: 슈팅중일때 재정전 안되게 하는 로직 추가
+    슈팅 에니메이션이 종료되야 IsShooting = false가 되도록 해야 함.
+    */
+
+    if (AmmoCount == 0)return;
+
+    if (AmmoCount > WeaponData->AmmoCount - CurrentAmmoCount) {
+        AmmoCount -= WeaponData->AmmoCount - CurrentAmmoCount;
+        CurrentAmmoCount = WeaponData->AmmoCount;
+    }
+    else {
+        CurrentAmmoCount += AmmoCount;
+        AmmoCount = 0;
+    }
+
+    UiComponent->SetAmmoText(CurrentAmmoCount, AmmoCount);
+}
+
+void UWeaponComponent::IncreaseAmmo(const uint32 Ammo)
+{
+    AmmoCount = FMath::Clamp(AmmoCount + Ammo, 0, AmmoLimit);
 }

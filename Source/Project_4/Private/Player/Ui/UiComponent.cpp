@@ -21,9 +21,13 @@ void UUiComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-    if (CrosshairWidget) {
-        CrosshairWidget->AddToViewport();
-    }
+    if (CrosshairWidget) CrosshairWidget->AddToViewport();
+    if (AmmoWidget) AmmoWidget->AddToViewport();
+}
+
+void UUiComponent::SetAmmoText(const uint32 CurrentAmmoCount, const uint32 AmmoCount)
+{
+    AmmoWidget->SetAmmoText(CurrentAmmoCount, AmmoCount);
 }
 
 
