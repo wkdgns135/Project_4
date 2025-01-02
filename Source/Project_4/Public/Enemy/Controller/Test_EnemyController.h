@@ -38,6 +38,8 @@ class PROJECT_4_API ATest_EnemyController : public AAIController
 	static const FName Key_isHit;
 	static const FName Key_eState;
 	static const FName Key_eType;
+	static const FName Key_TargetLocation;
+	static const FName Key_PlayerLocation;
 
 public:
 	ATest_EnemyController();
@@ -47,6 +49,8 @@ public:
 
 	void SetState(EEnemyState eState);
 	void SetType(EEnemyType eType);
+	void SetTargetLocation(FVector location);
+	void SetPlayerLocation(FVector location);
 
 	//EEnemyState eState = EEnemyState::IDLE;
 

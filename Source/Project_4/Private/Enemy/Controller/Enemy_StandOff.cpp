@@ -9,7 +9,7 @@ AEnemy_StandOff::AEnemy_StandOff()
 {
 	maxHp = 150;
 	strength = 30;
-	speed = 50.0f;
+	speed = 250.0f;
 	attackRange = 1000.0f;
 	sightRange = 3000.0f;
 	currentHp = maxHp;

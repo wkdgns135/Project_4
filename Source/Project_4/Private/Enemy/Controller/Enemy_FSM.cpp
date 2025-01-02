@@ -1,5 +1,6 @@
 
 #include "Enemy/Controller/Enemy_FSM.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 UEnemy_FSM::UEnemy_FSM()
 {
@@ -32,7 +33,7 @@ void UEnemy_FSM::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompo
 	switch (eState)
 	{
 	case EEnemyState::IDLE:
-		IdleAction();
+		IdleAction(DeltaTime);
 		break;
 
 	case EEnemyState::MOVE:
@@ -61,16 +62,16 @@ FVector UEnemy_FSM::SetTargetFocus()
 	FVector directionTarget = (targetLocation - enemyLocation);
 	directionTarget.Z = 0;
 
-	FRotator newRotation = directionTarget.Rotation();
+	//FRotator newRotation = directionTarget.Rotation();
 
-	enemy->SetActorRotation(newRotation);
+	//enemy->SetActorRotation(newRotation);
 
 	return directionTarget;
 }
 
-void UEnemy_FSM::IdleAction()
+void UEnemy_FSM::IdleAction(float DeltaTime)
 {
-	//패트롤 구현이 필요함.
+	enemy->GetCharacterMovement()->MaxWalkSpeed = moveSpeed;
 
 	if (player && enemy)
 	{
@@ -86,6 +87,7 @@ void UEnemy_FSM::MoveAction(float DeltaTime)
 	if (player && enemy)
 	{
 		FVector Direction = SetTargetFocus();
+		enemy->GetCharacterMovement()->MaxWalkSpeed = moveSpeed * 2.0f;
 
 		if (Direction.Size() <= attackRange)
 		{
@@ -93,7 +95,7 @@ void UEnemy_FSM::MoveAction(float DeltaTime)
 		}
 		else
 		{
-			enemy->AddMovementInput(Direction.GetSafeNormal() * DeltaTime * moveSpeed);
+			//enemy->AddMovementInput(Direction.GetSafeNormal() * DeltaTime * moveSpeed);
 		}
 	}
 	
@@ -108,7 +110,7 @@ void UEnemy_FSM::AttackAction(float DeltaTime)
 		if (Direction.Size() <= attackRange)
 		{
 			//UE_LOG(LogTemp, Warning, TEXT("Attack!"));
-			enemy->AddMovementInput(Direction.GetSafeNormal() * DeltaTime * moveSpeed * 2.0f);
+			//enemy->AddMovementInput(Direction.GetSafeNormal() * DeltaTime * moveSpeed * 2.0f);
 		}
 		else
 		{

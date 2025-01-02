@@ -9,7 +9,7 @@ ATest_Enemy_Explosion::ATest_Enemy_Explosion()
 {
 	maxHp = 100;
 	strength = 100;
-	speed = 100.0f;
+	speed = 400.0f;
 	attackRange = 50.0f;
 	sightRange = 2000.0f;
 	currentHp = maxHp;

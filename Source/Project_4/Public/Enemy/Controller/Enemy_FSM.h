@@ -1,9 +1,10 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Test_Enemy.h"
-#include "Test_Player.h"
-#include "Test_EnemyController.h"
+#include "Enemy/Controller/Test_Enemy.h"
+#include "Enemy/Controller/Test_Player.h"
+
+#include "Enemy/Controller/Test_EnemyController.h"
 #include <Kismet/GameplayStatics.h>
 #include "Components/ActorComponent.h"
 #include "Enemy_FSM.generated.h"
@@ -28,7 +29,7 @@ public:
 	UPROPERTY(visibleAnywhere, Category = "FSM")
 	TObjectPtr<class ATest_Enemy> enemy;
 
-	void IdleAction();
+	void IdleAction(float DeltaTime);
 	void MoveAction(float DeltaTime);
 	void AttackAction(float DeltaTime);
 	void HitAction();

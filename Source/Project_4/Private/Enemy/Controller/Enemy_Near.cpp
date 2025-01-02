@@ -9,7 +9,7 @@ AEnemy_Near::AEnemy_Near()
 {
 	maxHp = 200;
 	strength = 50;
-	speed = 70.0f;
+	speed = 300.0f;
 	attackRange = 150.0f;
 	sightRange = 2000.0f;
 	currentHp = maxHp;

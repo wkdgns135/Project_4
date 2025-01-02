@@ -48,6 +48,9 @@ public:
 	UPROPERTY(VisibleAnywhere, Category = "Enemy")
 	float sightRange;
 
+	UPROPERTY(EditAnywhere, Category = "AnimationMontage")
+	UAnimMontage* AM_Idle;
+
 protected:
 	virtual void BeginPlay() override;
 
