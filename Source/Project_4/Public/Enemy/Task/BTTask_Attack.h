@@ -21,6 +21,8 @@ public:
 	UPROPERTY(EditAnywhere)
 	class UAnimMontage* AttackMontage;
 private:
-	UFUNCTION()
-	void OnAttackMontageEnded(UAnimMontage* montage, bool bInterrupted);
+	UBehaviorTreeComponent* bt_comp;
+
+	void OnAttackEnd();
+	void OnAttackHit();
 };
