@@ -22,8 +22,14 @@ void UEnemyAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
    }
 }
 
-void UEnemyAnimInstance::AnimNotify_Attack()
+void UEnemyAnimInstance::AnimNotify_OnAttackHitCheck()
 {
+   OnAttackHitCheck.Broadcast();
+}
 
-
+void UEnemyAnimInstance::AnimNotify_OnAttackEndCheck()
+{
+   OnAttackEndCheck.Broadcast();
+   OnAttackEndCheck.Clear();
+   OnAttackHitCheck.Clear();
 }
