@@ -22,12 +22,13 @@ EBTNodeResult::Type UBTTask_Attack::ExecuteTask(UBehaviorTreeComponent& BTC, uin
 
    ACharacter* ControllingPawn = Cast<ACharacter>(AIController->GetPawn());
    if (ControllingPawn == nullptr) return EBTNodeResult::Failed;
+   enemy = Cast<ATest_Enemy>(ControllingPawn);
 
    UEnemyAnimInstance* AnimInstance = Cast<UEnemyAnimInstance>(ControllingPawn->GetMesh()->GetAnimInstance());
    if (AnimInstance == nullptr) return EBTNodeResult::Failed;
 
    AnimInstance->Montage_Play(AttackMontage);
-   
+   enemy->SetAttackCheck(true);
    //AnimInstance->OnMontageEnded.AddDynamic(this, &UBTTask_Attack::OnAttackMontageEnded);
    if (!AnimInstance->OnAttackHitCheck.IsBoundToObject(this))
       AnimInstance->OnAttackHitCheck.AddUObject(this, &UBTTask_Attack::OnAttackHit);
@@ -40,10 +41,12 @@ EBTNodeResult::Type UBTTask_Attack::ExecuteTask(UBehaviorTreeComponent& BTC, uin
 void UBTTask_Attack::OnAttackHit() {
    UE_LOG(LogTemp, Log, TEXT("Attack hit timing"));
    //TODO : binding Attack
+   enemy->Attack();
 }
 
 void UBTTask_Attack::OnAttackEnd() {
    UE_LOG(LogTemp, Log, TEXT("Attack End!!"));
+   enemy->SetAttackCheck(false);
    FinishLatentTask(*bt_comp, EBTNodeResult::Succeeded);
 
 }

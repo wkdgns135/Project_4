@@ -23,7 +23,7 @@ public:
 	void GetHit(int32 damage, AActor* byWho) override;
 	void Die() override;
 	void DropItem() override;
-	void AttackHitCheck() override;
+	float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
 
 private:
 	virtual void BeginPlay() override;

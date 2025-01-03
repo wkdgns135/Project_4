@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "BehaviorTree/BTTaskNode.h"
+#include "Enemy/Controller/Test_Enemy.h"
 #include "BTTask_Attack.generated.h"
 
 /**
@@ -22,6 +23,7 @@ public:
 	class UAnimMontage* AttackMontage;
 private:
 	UBehaviorTreeComponent* bt_comp;
+	ATest_Enemy* enemy;
 
 	void OnAttackEnd();
 	void OnAttackHit();

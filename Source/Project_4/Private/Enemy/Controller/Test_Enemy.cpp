@@ -9,7 +9,7 @@ ATest_Enemy::ATest_Enemy()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
+	GetCapsuleComponent()->SetCollisionProfileName(TEXT("Enemy"));
 	fsm = CreateDefaultSubobject<UEnemy_FSM>(TEXT("FSM"));
 
 	maxHp = 100;
@@ -54,6 +54,13 @@ void ATest_Enemy::Attack()
 	//따라서 FSM에서 호출하면 적 유형별 공격을 오버라이딩하는 코드 필요.
 }
 
+float ATest_Enemy::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
+{
+	float FinalDamage = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
+	UE_LOG(LogTemp, Warning, TEXT("Actor Name : %s Damage : %f"), *GetName(), FinalDamage);
+	return FinalDamage;
+}
+
 void ATest_Enemy::GetHit(int32 damage, AActor* byWho)
 {
 	//충돌한 액터가 무엇인지 판별하여 플레이어의 공격인지 판별하는 코드 필요.
@@ -79,30 +86,9 @@ void ATest_Enemy::DropItem()
 	//자의적 사망, 타의적 사망에 따라 드랍할지, 확률은 어떤지 구현 필요.
 }
 
-void ATest_Enemy::AttackHitCheck()
-{
-	/*
-	FHitResult OutHitResult;
-	FCollisionQueryParams Params(SCENE_QUERY_STAT(Attack), true, this);
-
-	const FVector Start = GetActorLocation() + GetActorForwardVector() + GetCapsuleComponent()->GetScaledCapsuleRadius();
-	const FVector End = Start + GetActorForwardVector() * attackRange;
-	bool HitDetected = GetWorld()->SweepSingleByChannel
-	(
-		OutHitResult,
-		Start,
-		End,
-		FQuat::Identity,
-		ECollisionChannel::ECC_GameTraceChannel1,
-		FCollisionShape::MakeSphere(attackRadius),
-		Params
-	);
-	*/
-}
-
 void ATest_Enemy::SetAttackCheck(bool isPlay)
 {
-
+	if (fsm) fsm->SetAttackPlay(isPlay);
 }
 
 void ATest_Enemy::SetMaxHp(int32 hp) { maxHp = hp; }

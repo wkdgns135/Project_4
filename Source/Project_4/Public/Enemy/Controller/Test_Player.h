@@ -14,6 +14,7 @@ class PROJECT_4_API ATest_Player : public ACharacter
 public:
 	// Sets default values for this character's properties
 	ATest_Player();
+	float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
 
 protected:
 	// Called when the game starts or when spawned

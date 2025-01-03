@@ -5,12 +5,12 @@
 #include "CoreMinimal.h"
 //#include "Enemy/Controller/Enemy_FSM.h"
 #include "GameFramework/Character.h"
+#include "Engine/DamageEvents.h"
 #include "Components/CapsuleComponent.h"
-#include "Enemy/Task/EnemyAnimationAttackInterface.h"
 #include "Test_Enemy.generated.h"
 
 UCLASS()
-class PROJECT_4_API ATest_Enemy : public ACharacter, public IEnemyAnimationAttackInterface
+class PROJECT_4_API ATest_Enemy : public ACharacter
 {
 	GENERATED_BODY()
 
@@ -23,6 +23,7 @@ public:
 	virtual void GetHit(int32 damage, AActor* byWho);
 	virtual void Die();
 	virtual void DropItem();
+	virtual void SetAttackCheck(bool isPlay);
 	void SetMaxHp(int32 hp);
 	void SetCurrentHp(int32 hp);
 	void SetSpeed(float spd);
@@ -55,8 +56,7 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
-	virtual void AttackHitCheck() override;
-	virtual void SetAttackCheck(bool isPlay);
+	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
 	int32 currentHp;
 
 public:	
