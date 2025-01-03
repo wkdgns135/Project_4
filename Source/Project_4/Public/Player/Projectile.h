@@ -22,21 +22,17 @@ public:
     // Called every frame
     virtual void Tick(float DeltaTime) override;
 
-    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
-    class USphereComponent* CollisionComponent;
-
-    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
-    class UProjectileMovementComponent* ProjectileMovementComponent;
-
-    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
-    class UStaticMeshComponent* ProjectileMeshComponent;
-
-    UPROPERTY(EditDefaultsOnly, Category = "Effects")
-    class UParticleSystem* ImpactEffect;
 
     UFUNCTION()
     void OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit);
 
 	void ShootInDirection(const FVector& ShootDirection, const uint32 Speed);
+
+private:
+    class USphereComponent* CollisionComponent;
+    class UProjectileMovementComponent* ProjectileMovementComponent;
+    class UStaticMeshComponent* ProjectileMeshComponent;
+    class UParticleSystem* ImpactEffect;
+
 };
 

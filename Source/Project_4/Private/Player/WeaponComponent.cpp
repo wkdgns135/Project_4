@@ -32,6 +32,7 @@ void UWeaponComponent::BeginPlay()
 
     CurrentAmmoCount = WeaponData->AmmoCount;
     AmmoCount = CurrentAmmoCount * 3;
+    AmmoLimit = AmmoCount;
     UiComponent->SetAmmoText(CurrentAmmoCount, AmmoCount);
     IsShooting = false;
 }
