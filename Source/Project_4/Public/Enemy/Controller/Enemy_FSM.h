@@ -43,6 +43,7 @@ public:
 
 	void SetEnemyType(EEnemyType enemyType);
 	void SetEnemyStatus(float sightR, float spd, float range);
+	void SetAttackPlay(bool isplay);
 	FVector SetTargetFocus();
 
 protected:
@@ -57,6 +58,7 @@ private:
 	float attackRange;
 	float hitDelayTime;
 	float currentTime;
+	bool isPlay;
 
 	TObjectPtr<class ATest_EnemyController> aiController;
 };

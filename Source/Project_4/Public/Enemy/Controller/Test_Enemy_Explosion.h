@@ -23,6 +23,7 @@ public:
 	void GetHit(int32 damage, AActor* byWho) override;
 	void Die() override;
 	void DropItem() override;
+	void AttackHitCheck() override;
 
 private:
 	virtual void BeginPlay() override;

@@ -19,7 +19,7 @@ void UEnemy_FSM::BeginPlay()
 	enemy = Cast<ATest_Enemy>(GetOwner());
 
 	aiController = enemy->GetController<ATest_EnemyController>();
-
+	isPlay = false;
 	hitDelayTime = 1.0f;
 }
 
@@ -112,7 +112,7 @@ void UEnemy_FSM::AttackAction(float DeltaTime)
 			//UE_LOG(LogTemp, Warning, TEXT("Attack!"));
 			//enemy->AddMovementInput(Direction.GetSafeNormal() * DeltaTime * moveSpeed * 2.0f);
 		}
-		else
+		else if (!isPlay)
 		{
 			SetMoveState();
 		}
@@ -177,4 +177,9 @@ void UEnemy_FSM::SetDieState()
 {
 	eState = EEnemyState::DIE;
 	aiController->SetState(eState);
+}
+
+void UEnemy_FSM::SetAttackPlay(bool isplay)
+{
+	isPlay = isplay;
 }

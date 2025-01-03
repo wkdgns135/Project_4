@@ -27,7 +27,7 @@ EBTNodeResult::Type UBTTask_Attack::ExecuteTask(UBehaviorTreeComponent& BTC, uin
    if (AnimInstance == nullptr) return EBTNodeResult::Failed;
 
    AnimInstance->Montage_Play(AttackMontage);
-
+   
    //AnimInstance->OnMontageEnded.AddDynamic(this, &UBTTask_Attack::OnAttackMontageEnded);
    if (!AnimInstance->OnAttackHitCheck.IsBoundToObject(this))
       AnimInstance->OnAttackHitCheck.AddUObject(this, &UBTTask_Attack::OnAttackHit);

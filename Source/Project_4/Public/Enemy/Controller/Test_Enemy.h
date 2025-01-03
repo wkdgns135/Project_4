@@ -5,10 +5,12 @@
 #include "CoreMinimal.h"
 //#include "Enemy/Controller/Enemy_FSM.h"
 #include "GameFramework/Character.h"
+#include "Components/CapsuleComponent.h"
+#include "Enemy/Task/EnemyAnimationAttackInterface.h"
 #include "Test_Enemy.generated.h"
 
 UCLASS()
-class PROJECT_4_API ATest_Enemy : public ACharacter
+class PROJECT_4_API ATest_Enemy : public ACharacter, public IEnemyAnimationAttackInterface
 {
 	GENERATED_BODY()
 
@@ -48,12 +50,13 @@ public:
 	UPROPERTY(VisibleAnywhere, Category = "Enemy")
 	float sightRange;
 
-	UPROPERTY(EditAnywhere, Category = "AnimationMontage")
-	UAnimMontage* AM_Idle;
+	UPROPERTY(VisibleAnywhere, Category = "Enemy")
+	float attackRadius;
 
 protected:
 	virtual void BeginPlay() override;
-
+	virtual void AttackHitCheck() override;
+	virtual void SetAttackCheck(bool isPlay);
 	int32 currentHp;
 
 public:	

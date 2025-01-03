@@ -10,7 +10,8 @@ ATest_Enemy_Explosion::ATest_Enemy_Explosion()
 	maxHp = 100;
 	strength = 100;
 	speed = 400.0f;
-	attackRange = 50.0f;
+	attackRange = 100.0f;
+	attackRadius = 200.0f;
 	sightRange = 2000.0f;
 	currentHp = maxHp;
 }
@@ -30,6 +31,34 @@ void ATest_Enemy_Explosion::BeginPlay()
 void ATest_Enemy_Explosion::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+}
+
+void ATest_Enemy_Explosion::AttackHitCheck()
+{
+	Super::AttackHitCheck();
+
+	UE_LOG(LogTemp, Warning, TEXT("In Attack Hit Check!"));
+
+	FHitResult OutHitResult;
+	FCollisionQueryParams Params(SCENE_QUERY_STAT(Attack), true, this);
+
+	const FVector Start = GetActorLocation() + GetActorForwardVector() + GetCapsuleComponent()->GetScaledCapsuleRadius();
+	const FVector End = Start + GetActorForwardVector() * attackRange;
+	bool HitDetected = GetWorld()->SweepSingleByChannel
+	(
+		OutHitResult,
+		Start,
+		End,
+		FQuat::Identity,
+		ECollisionChannel::ECC_GameTraceChannel1,
+		FCollisionShape::MakeSphere(attackRadius),
+		Params
+	);
+
+	if (HitDetected)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Attack!"));
+	}
 }
 
 void ATest_Enemy_Explosion::Idle()

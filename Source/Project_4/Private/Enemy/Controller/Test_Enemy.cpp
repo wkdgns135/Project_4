@@ -3,6 +3,7 @@
 #include "Enemy/Controller/Enemy_FSM.h"
 #include "Enemy/Controller/Test_Enemy.h"
 
+
 // Sets default values
 ATest_Enemy::ATest_Enemy()
 {
@@ -15,6 +16,7 @@ ATest_Enemy::ATest_Enemy()
 	strength = 10;
 	speed = 30.0f;
 	attackRange = 500.0f;
+	attackRadius = 200.0f;
 	sightRange = 1000.0f;
 	currentHp = maxHp;
 }
@@ -75,6 +77,32 @@ void ATest_Enemy::Die()
 void ATest_Enemy::DropItem()
 {
 	//자의적 사망, 타의적 사망에 따라 드랍할지, 확률은 어떤지 구현 필요.
+}
+
+void ATest_Enemy::AttackHitCheck()
+{
+	/*
+	FHitResult OutHitResult;
+	FCollisionQueryParams Params(SCENE_QUERY_STAT(Attack), true, this);
+
+	const FVector Start = GetActorLocation() + GetActorForwardVector() + GetCapsuleComponent()->GetScaledCapsuleRadius();
+	const FVector End = Start + GetActorForwardVector() * attackRange;
+	bool HitDetected = GetWorld()->SweepSingleByChannel
+	(
+		OutHitResult,
+		Start,
+		End,
+		FQuat::Identity,
+		ECollisionChannel::ECC_GameTraceChannel1,
+		FCollisionShape::MakeSphere(attackRadius),
+		Params
+	);
+	*/
+}
+
+void ATest_Enemy::SetAttackCheck(bool isPlay)
+{
+
 }
 
 void ATest_Enemy::SetMaxHp(int32 hp) { maxHp = hp; }
