@@ -30,11 +30,13 @@ private:
     void GetScreenCenterWorldLocationAndDirection(FVector& OutWorldLocation, FVector& OutWorldDirection) const;
     void SpawnProjectile(const FVector& MuzzleLocation, const FVector& ShootDirection);
     void ApplyCameraShake() const;
+    void Shoot();
 
     USkeletalMeshComponent* SkeletalMeshComponent;
     UUiComponent* UiComponent;
     UPROPERTY(EditAnywhere, Category = "Weapon")
     UWeaponData* WeaponData;
+    FTimerHandle ShootingTimerHandle;
 
     int32 CurrentAmmoCount;
     int32 AmmoCount;
@@ -46,6 +48,9 @@ public:
 
     UFUNCTION(BlueprintCallable, Category = "Weapon")
     void FireWeapon();
+
+    UFUNCTION(BlueprintCallable, Category = "Weapon")
+    void StopFireWeapon();
 
     UFUNCTION(BlueprintCallable, Category = "Weapon")
     void ReloadWeapon();

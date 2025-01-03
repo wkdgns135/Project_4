@@ -71,6 +71,7 @@ FVector UWeaponComponent::CalculateShootDirection(const FVector& MuzzleLocation,
 
 void UWeaponComponent::SpawnProjectile(const FVector& MuzzleLocation, const FVector& ShootDirection)
 {
+    //NOTE: 오브젝트풀링을 적용할 수 있지만 간단한 프로젝트라 거기까지는 투머치라 적용안했음.
     FActorSpawnParameters SpawnParams;
     AProjectile* Projectile = GetWorld()->SpawnActor<AProjectile>(AProjectile::StaticClass(), MuzzleLocation, ShootDirection.Rotation(), SpawnParams);
     if (Projectile)
@@ -90,11 +91,21 @@ void UWeaponComponent::ApplyCameraShake() const
 
 void UWeaponComponent::FireWeapon()
 {
-    //TODO: 좌클릭 쭉 누르고 있으면 자동으로 슈팅되도록, 무기 연사속도 반영
-
-    if (CurrentAmmoCount == 0 || !SkeletalMeshComponent || !UiComponent) return;
     IsShooting = true;
+    Shoot();
+    GetWorld()->GetTimerManager().SetTimer(
+        ShootingTimerHandle, this, &UWeaponComponent::Shoot, 1.0f / WeaponData->FireRate, true
+    ); // FireRate = 초당 발사 횟수
+}
 
+void UWeaponComponent::StopFireWeapon()
+{
+    IsShooting = false;
+    GetWorld()->GetTimerManager().ClearTimer(ShootingTimerHandle);
+}
+
+void UWeaponComponent::Shoot(){
+    if (CurrentAmmoCount == 0 || !SkeletalMeshComponent || !UiComponent || !IsShooting) return;
     FVector WorldLocation;
     FVector WorldDirection;
     GetScreenCenterWorldLocationAndDirection(WorldLocation, WorldDirection);
@@ -120,12 +131,7 @@ void UWeaponComponent::FireWeapon()
 
 void UWeaponComponent::ReloadWeapon()
 {
-    /*
-    TODO: 슈팅중일때 재정전 안되게 하는 로직 추가
-    슈팅 에니메이션이 종료되야 IsShooting = false가 되도록 해야 함.
-    */
-
-    if (AmmoCount == 0)return;
+    if (IsShooting || AmmoCount == 0)return;
 
     if (AmmoCount > WeaponData->AmmoCount - CurrentAmmoCount) {
         AmmoCount -= WeaponData->AmmoCount - CurrentAmmoCount;
