@@ -148,4 +148,5 @@ void UWeaponComponent::ReloadWeapon()
 void UWeaponComponent::IncreaseAmmo(const uint32 Ammo)
 {
     AmmoCount = FMath::Clamp(AmmoCount + Ammo, 0, AmmoLimit);
+    UiComponent->SetAmmoText(CurrentAmmoCount, AmmoCount);
 }
