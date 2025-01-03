@@ -26,6 +26,8 @@ APlayerCharacter::APlayerCharacter()
 	static ConstructorHelpers::FObjectFinder<UInputAction>IA_JUMP(TEXT("/Script/EnhancedInput.InputAction'/Game/Team_4/BluePrints/Player/InpuAction/IA_Jump.IA_Jump'"));
 	static ConstructorHelpers::FObjectFinder<UInputAction>IA_LOOK(TEXT("/Script/EnhancedInput.InputAction'/Game/Team_4/BluePrints/Player/InpuAction/IA_Look.IA_Look'"));
 	static ConstructorHelpers::FObjectFinder<UInputAction>IA_SPRINT(TEXT("/Script/EnhancedInput.InputAction'/Game/Team_4/BluePrints/Player/InpuAction/IA_Sprint.IA_Sprint'"));
+	static ConstructorHelpers::FObjectFinder<UInputAction>IA_FIRE(TEXT("/Script/EnhancedInput.InputAction'/Game/Team_4/BluePrints/Player/InpuAction/IA_Fire.IA_Fire'"));
+	static ConstructorHelpers::FObjectFinder<UInputAction>IA_RELOAD(TEXT("/Script/EnhancedInput.InputAction'/Game/Team_4/BluePrints/Player/InpuAction/IA_Reload.IA_Reload'"));
 
 	if (DEFAULT_CONTEXT.Succeeded())
 	{
@@ -46,9 +48,20 @@ APlayerCharacter::APlayerCharacter()
 	{
 		LookAction = IA_LOOK.Object;
 	}
+
 	if (IA_SPRINT.Succeeded())
 	{
 		SprintAction = IA_SPRINT.Object;
+	}
+
+	if (IA_FIRE.Succeeded())
+	{
+		FireAction = IA_FIRE.Object;
+	}
+
+	if (IA_RELOAD.Succeeded())
+	{
+		ReloadAction = IA_RELOAD.Object;
 	}
 
 }
@@ -68,6 +81,7 @@ void APlayerCharacter::BeginPlay()
 		}
 	}
 	
+	WeaponComponent = FindComponentByClass<UWeaponComponent>();
 }
 
 // Called every frame
@@ -89,12 +103,34 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Triggered, this, &APlayerCharacter::Jump);
 		EnhancedInputComponent->BindAction(SprintAction, ETriggerEvent::Triggered, this, &APlayerCharacter::Sprint);
 		EnhancedInputComponent->BindAction(SprintAction, ETriggerEvent::Completed, this, &APlayerCharacter::StopSprint);
+		EnhancedInputComponent->BindAction(FireAction, ETriggerEvent::Started, this, &APlayerCharacter::Fire);
+		EnhancedInputComponent->BindAction(FireAction, ETriggerEvent::Completed, this, &APlayerCharacter::StopFire);
+		EnhancedInputComponent->BindAction(ReloadAction, ETriggerEvent::Started, this, &APlayerCharacter::Reload);
 	}
 }
 
 void APlayerCharacter::Jump() {
 	Super::Jump();
 }
+
+void APlayerCharacter::Fire()
+{
+	if (!WeaponComponent)return;
+	WeaponComponent->FireWeapon();
+}
+
+void APlayerCharacter::StopFire()
+{
+	if (!WeaponComponent)return;
+	WeaponComponent->StopFireWeapon();
+}
+
+void APlayerCharacter::Reload()
+{
+	if (!WeaponComponent)return;
+	WeaponComponent->ReloadWeapon();
+}
+
 void APlayerCharacter::Move(const FInputActionValue& Value)
 {
 	// 이동에 사용될 방향과 속도를 나타냄

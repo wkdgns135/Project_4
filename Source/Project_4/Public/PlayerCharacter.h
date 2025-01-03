@@ -4,6 +4,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "Camera/CameraComponent.h"
+#include "Player/WeaponComponent.h"
 #include "PlayerCharacter.generated.h"
 
 
@@ -27,10 +28,19 @@ private:
 	class UInputAction* MoveAction;
 	UPROPERTY(editanywhere, category = input, meta = (allowprivateaccess = true))
 	class UInputAction* SprintAction;
+
+	UPROPERTY(editanywhere, category = input, meta = (allowprivateaccess = true))
+	class UInputAction* FireAction;
+
+	UPROPERTY(editanywhere, category = input, meta = (allowprivateaccess = true))
+	class UInputAction* ReloadAction;
+
 	UPROPERTY(editanywhere, category = input, meta = (allowprivateaccess = true))
 	float walkSpeed;
 	UPROPERTY(editanywhere, category = input, meta = (allowprivateaccess = true))
 	float sprintSpeed;
+
+	UWeaponComponent *WeaponComponent;
 
 public:
 	// Sets default values for this character's properties
@@ -52,6 +62,9 @@ public:
 	void Sprint();
 	void StopSprint();
 	void Jump() override;
+	void Fire();
+	void StopFire();
+	void Reload();
 
 
 	UPROPERTY(VisibleAnywhere)
