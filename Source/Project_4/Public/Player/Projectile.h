@@ -1,35 +1,38 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
+// Projectile.h
 #pragma once
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "Components/SphereComponent.h"
-#include "GameFramework/ProjectileMovementComponent.h"
 #include "Projectile.generated.h"
 
 UCLASS()
 class PROJECT_4_API AProjectile : public AActor
 {
-	GENERATED_BODY()
-	
-public:	
-	// Sets default values for this actor's properties
-	AProjectile();
+    GENERATED_BODY()
+
+public:
+    // Sets default values for this actor's properties
+    AProjectile();
 
 protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
+    // Called when the game starts or when spawned
+    virtual void BeginPlay() override;
 
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+public:
+    // Called every frame
+    virtual void Tick(float DeltaTime) override;
 
-	UPROPERTY(VisibleDefaultsOnly, Category = "Projectile")
-	USphereComponent* CollisionComponent;
 
-	UPROPERTY(VisibleAnywhere, Category = "Movement")
-	UProjectileMovementComponent* ProjectileMovementComponent;
+    UFUNCTION()
+    void OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit);
 
-	void FireInDirection(const FVector& ShootDirection);
+	void ShootInDirection(const FVector& ShootDirection, const uint32 Speed);
+
+private:
+    class USphereComponent* CollisionComponent;
+    class UProjectileMovementComponent* ProjectileMovementComponent;
+    class UStaticMeshComponent* ProjectileMeshComponent;
+    class UParticleSystem* ImpactEffect;
+
 };
+

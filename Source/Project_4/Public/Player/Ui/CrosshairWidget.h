@@ -30,5 +30,5 @@ public:
 
     // 위치 업데이트 함수
     UFUNCTION(BlueprintCallable, Category = "Crosshair")
-    void UpdateCrosshairSize(float Speed);
+    void UpdateCrosshairSize(const float Speed);
 };

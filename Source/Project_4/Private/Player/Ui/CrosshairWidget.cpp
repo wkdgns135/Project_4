@@ -1,9 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
-
-
 #include "Player/Ui/CrosshairWidget.h"
 
-void UCrosshairWidget::UpdateCrosshairSize(float Speed)
+void UCrosshairWidget::UpdateCrosshairSize(const float Speed)
 {
     if (!LineTop || !LineBottom || !LineLeft || !LineRight)
         return;
