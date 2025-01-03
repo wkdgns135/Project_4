@@ -24,4 +24,9 @@ public:
 private:
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
+
+	void SetWeapon();
+	UPROPERTY(EditAnywhere, Category="Test", meta = (AllowPrivateAccess = "true"))
+	UStaticMeshComponent* Weapon;
+
 };

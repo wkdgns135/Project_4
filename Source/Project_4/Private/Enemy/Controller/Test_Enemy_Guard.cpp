@@ -12,8 +12,9 @@ ATest_Enemy_Guard::ATest_Enemy_Guard()
 	attackRange = 150.0f;
 	sightRange = 2000.0f;
 	currentHp = maxHp;
-
-
+	Weapon = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Weapon"));
+	Weapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, TEXT("FX_Trail_02_R"));
+	Weapon->SetCollisionProfileName(TEXT("NoCollision"));
 }
 
 void ATest_Enemy_Guard::BeginPlay()
@@ -26,6 +27,8 @@ void ATest_Enemy_Guard::BeginPlay()
 		fsm->SetEnemyStatus(sightRange, speed, attackRange);
 		if (fsm->player) Idle();
 	}
+	
+	
 }
 
 void ATest_Enemy_Guard::Tick(float DeltaTime)
@@ -63,4 +66,8 @@ void ATest_Enemy_Guard::DropItem()
 	Super::DropItem();
 }
 
+
+void ATest_Enemy_Guard::SetWeapon() {
+
+}
 

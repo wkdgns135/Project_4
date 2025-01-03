@@ -14,7 +14,7 @@ const FName ABaseEnemyController::Key_isHit = TEXT("isHit");
 
 
 ABaseEnemyController::ABaseEnemyController() {
-   static ConstructorHelpers::FObjectFinder<UBehaviorTree> BTObject(TEXT("BehaviorTree'/Game/NoCommit/BT_BaseEnemy.BT_BaseEnemy'"));
+   static ConstructorHelpers::FObjectFinder<UBehaviorTree> BTObject(TEXT("BehaviorTree'/Game/NoCommit/BT_BaseEnemy1.BT_BaseEnemy1'"));
    if (BTObject.Succeeded()) {
       UE_LOG(LogTemp, Log, TEXT("BehaviorTree Asset Load Success!"));
       bt_asset = BTObject.Object;
