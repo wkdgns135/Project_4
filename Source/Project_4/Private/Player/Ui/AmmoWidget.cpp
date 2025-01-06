@@ -10,5 +10,5 @@ void UAmmoWidget::SetAmmoText(const uint32& CurrentAmmoCount, const uint32& Ammo
 		AmmoText->SetText(FText::FromString(AmmoString));
 
 	}
-
+	
 }

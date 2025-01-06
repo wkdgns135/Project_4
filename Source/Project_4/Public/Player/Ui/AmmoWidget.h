@@ -17,6 +17,5 @@ class PROJECT_4_API UAmmoWidget : public UUserWidget
 public:
 	UPROPERTY(meta = (BindWidget))
 	UTextBlock* AmmoText;
-
 	void SetAmmoText(const uint32& CurrentAmmoCount, const uint32& AmmoCount);
 };
