@@ -6,6 +6,10 @@
 #include "Animation/AnimInstance.h"
 #include "EnemyAnimInstance.generated.h"
 
+
+DECLARE_MULTICAST_DELEGATE(FOnAttackHitCheck)
+DECLARE_MULTICAST_DELEGATE(OnAttackEndCheck)
+
 /**
  * 
  */
@@ -17,8 +21,11 @@ public:
 	virtual void NativeInitializeAnimation() override; //animInstance가 초기화될때 실행
 	virtual void NativeUpdateAnimation(float DeltaSeconds) override; //update 될 때 실행
 
+
 	UFUNCTION()
-	void AnimNotify_Attack();
+	void AnimNotify_OnAttackHitCheck();
+	UFUNCTION()
+	void AnimNotify_OnAttackEndCheck();
 
 	UPROPERTY(BlueprintReadOnly)
 	class UCharacterMovementComponent* MovementComponent;
@@ -26,7 +33,8 @@ public:
 	UPROPERTY(BlueprintReadOnly)
 	float Speed;
 
-	//UPROPERTY(BlueprintReadOnly)
-
+public:
+	FOnAttackHitCheck OnAttackHitCheck;
+	OnAttackEndCheck OnAttackEndCheck;
 
 };

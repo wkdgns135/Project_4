@@ -42,7 +42,11 @@ public:
 	void SetDieState();
 
 	void SetEnemyType(EEnemyType enemyType);
-	void SetEnemyStatus(float sightR, float spd, float range);
+	void SetEnemyStatus(float sightR, float spd, float range, int32 hp);
+	void SetCurrentHp(int32 hp);
+	void SetEndAttack(bool flag);
+	void SetEndHit(bool flag);
+
 	FVector SetTargetFocus();
 
 protected:
@@ -52,11 +56,11 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 private:
+	int32 CurrentHp;
 	float moveSpeed;
 	float sightRange;
 	float attackRange;
-	float hitDelayTime;
-	float currentTime;
-
+	bool bEndAttackAnim;
+	bool bEndHitAnim;
 	TObjectPtr<class ATest_EnemyController> aiController;
 };

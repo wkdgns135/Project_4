@@ -17,7 +17,7 @@ public:
 	void Idle() override;
 	void Movement() override;
 	void Attack() override;
-	void GetHit(int32 damage, AActor* byWho) override;
+	void GetHit(float dmg) override;
 	void Die() override;
 	void DropItem() override;
 

@@ -9,7 +9,7 @@ ATest_Enemy_Guard::ATest_Enemy_Guard()
 	maxHp = 300;
 	strength = 10;
 	speed = 200.0f;
-	attackRange = 150.0f;
+	attackRange = 200.0f;
 	sightRange = 2000.0f;
 	currentHp = maxHp;
 	Weapon = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Weapon"));
@@ -24,7 +24,7 @@ void ATest_Enemy_Guard::BeginPlay()
 	if (fsm)
 	{
 		fsm->SetEnemyType(EEnemyType::GUARD);
-		fsm->SetEnemyStatus(sightRange, speed, attackRange);
+		fsm->SetEnemyStatus(sightRange, speed, attackRange, maxHp);
 		if (fsm->player) Idle();
 	}
 	
@@ -51,9 +51,9 @@ void ATest_Enemy_Guard::Attack()
 	Super::Attack();
 }
 
-void ATest_Enemy_Guard::GetHit(int32 damage, AActor* byWho)
+void ATest_Enemy_Guard::GetHit(float dmg)
 {
-	Super::GetHit(damage, byWho);
+	Super::GetHit(dmg);
 }
 
 void ATest_Enemy_Guard::Die()
