@@ -1,9 +1,6 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #pragma once
 
 #include "CoreMinimal.h"
-//#include "Enemy/Controller/Enemy_FSM.h"
 #include "GameFramework/Character.h"
 #include "Engine/DamageEvents.h"
 #include "Components/CapsuleComponent.h"
@@ -17,13 +14,12 @@ class PROJECT_4_API ATest_Enemy : public ACharacter
 public:
 	ATest_Enemy();
 
-	virtual void Idle();
-	virtual void Movement();
 	virtual void Attack();
-	virtual void GetHit(int32 damage, AActor* byWho);
 	virtual void Die();
-	virtual void DropItem();
-	virtual void SetAttackCheck(bool isPlay);
+	
+	void SetAttackCheck(bool flag);
+	void SetHitCheck(bool flag);
+
 	void SetMaxHp(int32 hp);
 	void SetCurrentHp(int32 hp);
 	void SetSpeed(float spd);
@@ -32,6 +28,17 @@ public:
 	int32 GetCurrentHp();
 	float GetSpeed();
 	int32 GetStrength();
+
+protected:
+	virtual void BeginPlay() override;
+	virtual void Tick(float DeltaTime) override;
+	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
+	virtual void Idle();
+	virtual void Movement();
+	virtual void GetHit(float dmg);
+	virtual void DropItem();
+
+	int32 currentHp;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = FSMComponent)
 	TObjectPtr<class UEnemy_FSM> fsm;
@@ -53,13 +60,4 @@ public:
 
 	UPROPERTY(VisibleAnywhere, Category = "Enemy")
 	float attackRadius;
-
-protected:
-	virtual void BeginPlay() override;
-	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
-	int32 currentHp;
-
-public:	
-	virtual void Tick(float DeltaTime) override;
-
 };

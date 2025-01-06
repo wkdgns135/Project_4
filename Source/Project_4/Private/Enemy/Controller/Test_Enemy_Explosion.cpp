@@ -23,7 +23,7 @@ void ATest_Enemy_Explosion::BeginPlay()
 	if (fsm)
 	{
 		fsm->SetEnemyType(EEnemyType::EXPLOSION);
-		fsm->SetEnemyStatus(sightRange, speed, attackRange);
+		fsm->SetEnemyStatus(sightRange, speed, attackRange, maxHp);
 		if (fsm->player) Idle();
 	}
 }
@@ -46,8 +46,6 @@ void ATest_Enemy_Explosion::Movement()
 void ATest_Enemy_Explosion::Attack()
 {
 	Super::Attack();
-	
-	UE_LOG(LogTemp, Warning, TEXT("In Attack Hit Check!"));
 
 	FHitResult OutHitResult;
 	FCollisionQueryParams Params(SCENE_QUERY_STAT(Attack), true, this);
@@ -69,9 +67,14 @@ void ATest_Enemy_Explosion::Attack()
 	{
 		if (OutHitResult.GetActor())
 		{
-			UE_LOG(LogTemp, Warning, TEXT("Attack!"));
 			FDamageEvent DamageEvent;
 			OutHitResult.GetActor()->TakeDamage(strength, DamageEvent, GetController(), this);
+			
+			FTimerHandle TimerHandle;
+			GetWorld()->GetTimerManager().SetTimer(TimerHandle, FTimerDelegate::CreateLambda([&]()
+				{
+					Destroy();
+				}), 0.3f, false);
 		}
 	}
 	
@@ -84,9 +87,9 @@ void ATest_Enemy_Explosion::Attack()
 #endif
 }
 
-void ATest_Enemy_Explosion::GetHit(int32 damage, AActor* byWho)
+void ATest_Enemy_Explosion::GetHit(float dmg)
 {
-	Super::GetHit(damage, byWho);
+	Super::GetHit(dmg);
 }
 
 void ATest_Enemy_Explosion::Die()
@@ -97,9 +100,4 @@ void ATest_Enemy_Explosion::Die()
 void ATest_Enemy_Explosion::DropItem()
 {
 	Super::DropItem();
-}
-
-float ATest_Enemy_Explosion::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
-{
-	return Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 }

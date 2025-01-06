@@ -5,7 +5,6 @@
 #include "AIController.h"
 #include "Enemy/Anim/EnemyAnimInstance.h"
 #include "GameFramework/Character.h"
-//#include "AnimIn"
 
 UBTTask_Attack::UBTTask_Attack()
 {
@@ -24,11 +23,12 @@ EBTNodeResult::Type UBTTask_Attack::ExecuteTask(UBehaviorTreeComponent& BTC, uin
    if (ControllingPawn == nullptr) return EBTNodeResult::Failed;
    enemy = Cast<ATest_Enemy>(ControllingPawn);
 
-   UEnemyAnimInstance* AnimInstance = Cast<UEnemyAnimInstance>(ControllingPawn->GetMesh()->GetAnimInstance());
+   AnimInstance = Cast<UEnemyAnimInstance>(ControllingPawn->GetMesh()->GetAnimInstance());
    if (AnimInstance == nullptr) return EBTNodeResult::Failed;
 
+   //enemy->SetAttackCheck(false);
    AnimInstance->Montage_Play(AttackMontage);
-   enemy->SetAttackCheck(true);
+   
    //AnimInstance->OnMontageEnded.AddDynamic(this, &UBTTask_Attack::OnAttackMontageEnded);
    if (!AnimInstance->OnAttackHitCheck.IsBoundToObject(this))
       AnimInstance->OnAttackHitCheck.AddUObject(this, &UBTTask_Attack::OnAttackHit);
@@ -46,11 +46,28 @@ void UBTTask_Attack::OnAttackHit() {
 
 void UBTTask_Attack::OnAttackEnd() {
    UE_LOG(LogTemp, Log, TEXT("Attack End!!"));
-   enemy->SetAttackCheck(false);
+   enemy->SetAttackCheck(true);
    FinishLatentTask(*bt_comp, EBTNodeResult::Succeeded);
 
 }
+/*
+bool UBTTask_Attack::AttackIsPlaying()
+{
+    bool result = false;
 
+    if (AnimInstance != nullptr)
+    {
+        result = AnimInstance->Montage_IsPlaying(AttackMontage);
+    }
+
+    return result;
+}
+
+UAnimMontage* UBTTask_Attack::GetAttackMontage()
+{
+    return AttackMontage;
+}
+*/
 //void UBTTask_Attack::OnAttackMontageEnded(UAnimMontage* montage, bool bInterrupted)
 //{
 //   UE_LOG(LogTemp, Log, TEXT("Montage End in Task!!"));

@@ -21,6 +21,7 @@ ATest_EnemyController::ATest_EnemyController() {
         UE_LOG(LogTemp, Log, TEXT("BehaviorTree Asset Load Success!"));
         bt_asset = BTObject.Object;
         blackBoard = Blackboard;
+
     }
 }
 
@@ -42,8 +43,33 @@ void ATest_EnemyController::OnPossess(APawn* pawn) {
 
 void ATest_EnemyController::SetState(EEnemyState eState)
 {
+    FString state = "";
+
+    switch (eState)
+    {
+    case EEnemyState::IDLE:
+        state = "IDLE";
+        break;
+
+    case EEnemyState::ATTACK:
+        state = "ATTACK";
+        break;
+
+    case EEnemyState::MOVE:
+        state = "MOVE";
+        break;
+
+    case EEnemyState::HIT:
+        state = "HIT";
+        break;
+
+    case EEnemyState::DIE:
+        state = "DIE";
+        break;
+    }
+
     if (blackBoard) blackBoard->SetValueAsEnum(Key_eState, (uint8)eState);
-    UE_LOG(LogTemp, Log, TEXT("FSM Call SetState of EnemyController"));
+    UE_LOG(LogTemp, Log, TEXT("FSM Call SetState of EnemyController : %s"), *state);
 }
 
 void ATest_EnemyController::SetType(EEnemyType eType)

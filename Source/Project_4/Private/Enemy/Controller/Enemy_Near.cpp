@@ -22,7 +22,7 @@ void AEnemy_Near::BeginPlay()
 	if (fsm)
 	{
 		fsm->SetEnemyType(EEnemyType::NEAR);
-		fsm->SetEnemyStatus(sightRange, speed, attackRange);
+		fsm->SetEnemyStatus(sightRange, speed, attackRange, maxHp);
 		if (fsm->player) Idle();
 	}
 }
@@ -47,9 +47,9 @@ void AEnemy_Near::Attack()
 	Super::Attack();
 }
 
-void AEnemy_Near::GetHit(int32 damage, AActor* byWho)
+void AEnemy_Near::GetHit(float dmg)
 {
-	Super::GetHit(damage, byWho);
+	Super::GetHit(dmg);
 }
 
 void AEnemy_Near::Die()

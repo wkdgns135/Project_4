@@ -19,16 +19,14 @@ void UEnemy_FSM::BeginPlay()
 	enemy = Cast<ATest_Enemy>(GetOwner());
 
 	aiController = enemy->GetController<ATest_EnemyController>();
-	isPlay = false;
-	hitDelayTime = 1.0f;
+	bEndAttackAnim = true;
+	bEndHitAnim = true;
 }
 
 
 void UEnemy_FSM::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
-	currentTime += DeltaTime;
 
 	switch (eState)
 	{
@@ -86,17 +84,9 @@ void UEnemy_FSM::MoveAction(float DeltaTime)
 {
 	if (player && enemy)
 	{
-		FVector Direction = SetTargetFocus();
 		enemy->GetCharacterMovement()->MaxWalkSpeed = moveSpeed * 2.0f;
 
-		if (Direction.Size() <= attackRange)
-		{
-			SetAttackState();
-		}
-		else
-		{
-			//enemy->AddMovementInput(Direction.GetSafeNormal() * DeltaTime * moveSpeed);
-		}
+		if (SetTargetFocus().Size() <= attackRange) SetAttackState();
 	}
 	
 }
@@ -105,35 +95,22 @@ void UEnemy_FSM::AttackAction(float DeltaTime)
 {
 	if (player && enemy)
 	{
-		FVector Direction = SetTargetFocus();
-
-		if (Direction.Size() <= attackRange)
-		{
-			//UE_LOG(LogTemp, Warning, TEXT("Attack!"));
-			//enemy->AddMovementInput(Direction.GetSafeNormal() * DeltaTime * moveSpeed * 2.0f);
-		}
-		else if (!isPlay)
-		{
-			SetMoveState();
-		}
+		if (bEndAttackAnim && SetTargetFocus().Size() >= attackRange) SetMoveState();
 	}
 }
 
 void UEnemy_FSM::HitAction()
 {
-	SetHitState();
-	/*
-	currentTime = 0;
-
-	if (currentTime > hitDelayTime) eState = EEnemyState::MOVE;
-	*/
+	if (bEndHitAnim)
+	{
+		if (CurrentHp <= 0) SetDieState();
+		else SetMoveState();
+	}
 }
 
 void UEnemy_FSM::DieAction()
 {
-	SetDieState();
-	//enemy->DropItem();
-	//enemy->Destroy();
+	//SetDieState();
 }
 
 void UEnemy_FSM::SetEnemyType(EEnemyType enemyType)
@@ -142,11 +119,17 @@ void UEnemy_FSM::SetEnemyType(EEnemyType enemyType)
 	aiController->SetType(eType);
 }
 
-void UEnemy_FSM::SetEnemyStatus(float sightR, float spd, float range)
+void UEnemy_FSM::SetEnemyStatus(float sightR, float spd, float range, int32 hp)
 {
 	moveSpeed = spd;
 	attackRange = range;
 	sightRange = sightR;
+	CurrentHp = hp;
+}
+
+void UEnemy_FSM::SetCurrentHp(int32 hp)
+{
+	CurrentHp = hp;
 }
 
 void UEnemy_FSM::SetIdleState()
@@ -163,12 +146,15 @@ void UEnemy_FSM::SetMoveState()
 
 void UEnemy_FSM::SetAttackState()
 {
+	//if (!bEndHitAnim) return;
+	SetEndAttack(false);
 	eState = EEnemyState::ATTACK;
 	aiController->SetState(eState);
 }
 
 void UEnemy_FSM::SetHitState()
 {
+	SetEndHit(false);
 	eState = EEnemyState::HIT;
 	aiController->SetState(eState);
 }
@@ -179,7 +165,12 @@ void UEnemy_FSM::SetDieState()
 	aiController->SetState(eState);
 }
 
-void UEnemy_FSM::SetAttackPlay(bool isplay)
+void UEnemy_FSM::SetEndAttack(bool flag)
 {
-	isPlay = isplay;
+	bEndAttackAnim = flag;
+}
+
+void UEnemy_FSM::SetEndHit(bool flag)
+{
+	bEndHitAnim = flag;
 }

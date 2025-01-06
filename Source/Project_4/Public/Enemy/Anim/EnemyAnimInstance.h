@@ -36,4 +36,5 @@ public:
 public:
 	FOnAttackHitCheck OnAttackHitCheck;
 	OnAttackEndCheck OnAttackEndCheck;
+
 };

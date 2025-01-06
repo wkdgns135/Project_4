@@ -21,9 +21,14 @@ public:
 	
 	UPROPERTY(EditAnywhere)
 	class UAnimMontage* AttackMontage;
+
+	//bool AttackIsPlaying();
+	//UAnimMontage* GetAttackMontage();
+
 private:
 	UBehaviorTreeComponent* bt_comp;
 	ATest_Enemy* enemy;
+	class UEnemyAnimInstance* AnimInstance;
 
 	void OnAttackEnd();
 	void OnAttackHit();

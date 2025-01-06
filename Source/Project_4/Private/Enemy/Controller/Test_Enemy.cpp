@@ -1,13 +1,8 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #include "Enemy/Controller/Enemy_FSM.h"
 #include "Enemy/Controller/Test_Enemy.h"
 
-
-// Sets default values
 ATest_Enemy::ATest_Enemy()
 {
- 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	GetCapsuleComponent()->SetCollisionProfileName(TEXT("Enemy"));
 	fsm = CreateDefaultSubobject<UEnemy_FSM>(TEXT("FSM"));
@@ -21,20 +16,13 @@ ATest_Enemy::ATest_Enemy()
 	currentHp = maxHp;
 }
 
-// Called when the game starts or when spawned
 void ATest_Enemy::BeginPlay()
 {
 	Super::BeginPlay();
-	
-	//if (fsm && fsm->player) Movement();
-	//fsm->SetEnemyType(EEnemyType::GUARD);
-	//if (fsm) fsm->SetEnemyStatus(sightRange, speed, attackRange);
 }
 
-// Called every frame
 void ATest_Enemy::Tick(float DeltaTime)
 {
-	Super::Tick(DeltaTime);
 }
 
 void ATest_Enemy::Idle()
@@ -50,45 +38,47 @@ void ATest_Enemy::Movement()
 void ATest_Enemy::Attack()
 {
 	if (fsm) fsm->SetAttackState();
-	//임시 코드. 보통 사정거리 안에 들어오면 FSM에서 공격 상태에 돌입.
-	//따라서 FSM에서 호출하면 적 유형별 공격을 오버라이딩하는 코드 필요.
+	//적 유형별 클래스인 파생 클래스에서 구현
 }
 
 float ATest_Enemy::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
 	float FinalDamage = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
-	UE_LOG(LogTemp, Warning, TEXT("Actor Name : %s Damage : %f"), *GetName(), FinalDamage);
+
+	//공격한 엑터가 플레이어인지 판별 필요?
+	GetHit(FinalDamage);
+
 	return FinalDamage;
 }
 
-void ATest_Enemy::GetHit(int32 damage, AActor* byWho)
+void ATest_Enemy::GetHit(float dmg)
 {
-	//충돌한 액터가 무엇인지 판별하여 플레이어의 공격인지 판별하는 코드 필요.
-	if (fsm) fsm->SetHitState();
-
-	currentHp -= damage;
-
-	if (currentHp <= 0)
+	if (fsm && currentHp > 0)
 	{
-		currentHp = 0;
-		Die();
+		fsm->SetCurrentHp(currentHp -= dmg);
+		fsm->SetHitState();
 	}
 }
 
-void ATest_Enemy::Die()
+void ATest_Enemy::Die() //die animation 끝나면 호출
 {
-	if (fsm) fsm->SetDieState();
-	//객체가 죽는 경우 (hp 0 이거나 자폭) 호출.
+	DropItem();
+	Destroy();
 }
 
 void ATest_Enemy::DropItem()
 {
-	//자의적 사망, 타의적 사망에 따라 드랍할지, 확률은 어떤지 구현 필요.
+	//어떤 확률로 무엇을 드랍할지 구현 필요.
 }
 
-void ATest_Enemy::SetAttackCheck(bool isPlay)
+void ATest_Enemy::SetAttackCheck(bool flag)
 {
-	if (fsm) fsm->SetAttackPlay(isPlay);
+	if (fsm) fsm->SetEndAttack(flag);
+}
+
+void ATest_Enemy::SetHitCheck(bool flag)
+{
+	if (fsm) fsm->SetEndHit(flag);
 }
 
 void ATest_Enemy::SetMaxHp(int32 hp) { maxHp = hp; }

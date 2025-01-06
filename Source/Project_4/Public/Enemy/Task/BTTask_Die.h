@@ -5,28 +5,28 @@
 #include "CoreMinimal.h"
 #include "BehaviorTree/BTTaskNode.h"
 #include "Enemy/Controller/Test_Enemy.h"
-#include "BTTask_Hit.generated.h"
+#include "BTTask_Die.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class PROJECT_4_API UBTTask_Hit : public UBTTaskNode
+class PROJECT_4_API UBTTask_Die : public UBTTaskNode
 {
 	GENERATED_BODY()
-
+	
 public:
-	UBTTask_Hit();
+	UBTTask_Die();
 
 	EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& BTC, uint8* NodeMemory);
-	
+
 	UPROPERTY(EditAnywhere)
-	UAnimMontage* HitMontage;
+	UAnimMontage* DieMontage;
 
 private:
 	UBehaviorTreeComponent* bt_comp;
 	ATest_Enemy* Enemy;
 
 	UFUNCTION()
-	void OnHitEnded(UAnimMontage* montage, bool Inturrupt);
+	void OnDieEnded(UAnimMontage* montage, bool Inturrupt);
 };
