@@ -15,10 +15,18 @@ public:
 	// Sets default values for this actor's properties
 	AEnemyWeapon();
 
+	void SetAttackState();
+	void EndAttackState();
+	void SetWeaponOwner(ACharacter* Character);
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 private:
 	UPROPERTY(EditAnywhere, Category = "Weapon", meta=(AllowPrivateAccess = "true"))
 	UStaticMeshComponent* Weapon;
+	ATest_Enemy* Owner;
+
+	UFUNCTION()
+	void OnWeaponOverlap(UPrimitiveComponent* OverlapedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& Result);
 };

@@ -3,6 +3,7 @@
 
 #include "Enemy/Controller/Test_Enemy_Guard.h"
 #include "Enemy/Controller/Enemy_FSM.h"
+#include "Enemy/EnemyWeapon.h"
 
 ATest_Enemy_Guard::ATest_Enemy_Guard()
 {
@@ -12,9 +13,7 @@ ATest_Enemy_Guard::ATest_Enemy_Guard()
 	attackRange = 200.0f;
 	sightRange = 2000.0f;
 	currentHp = maxHp;
-	Weapon = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Weapon"));
-	Weapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, TEXT("FX_Trail_02_R"));
-	Weapon->SetCollisionProfileName(TEXT("NoCollision"));
+
 }
 
 void ATest_Enemy_Guard::BeginPlay()
@@ -28,7 +27,14 @@ void ATest_Enemy_Guard::BeginPlay()
 		if (fsm->player) Idle();
 	}
 	
-	
+	FActorSpawnParameters SpawnParams;
+	SpawnParams.Owner = this;
+	SpawnParams.Instigator = GetInstigator();
+
+	AActor* SpawnActor = GetWorld()->SpawnActor<AEnemyWeapon>(SpawnParams);
+	SpawnActor->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, TEXT("FX_Trail_02_R"));
+	Weapon = Cast<AEnemyWeapon>(SpawnActor);
+	Weapon->SetWeaponOwner(this);
 }
 
 void ATest_Enemy_Guard::Tick(float DeltaTime)
@@ -49,6 +55,7 @@ void ATest_Enemy_Guard::Movement()
 void ATest_Enemy_Guard::Attack()
 {
 	Super::Attack();
+	Weapon->SetAttackState();
 }
 
 void ATest_Enemy_Guard::GetHit(float dmg)

@@ -16,7 +16,7 @@ public:
 
 	void Idle() override;
 	void Movement() override;
-	void Attack() override;
+	virtual void Attack() override;
 	void GetHit(float dmg) override;
 	void Die() override;
 	void DropItem() override;
@@ -27,6 +27,6 @@ private:
 
 	void SetWeapon();
 	UPROPERTY(EditAnywhere, Category="Test", meta = (AllowPrivateAccess = "true"))
-	UStaticMeshComponent* Weapon;
+	class AEnemyWeapon* Weapon;
 
 };
