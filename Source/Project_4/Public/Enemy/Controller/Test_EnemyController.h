@@ -46,6 +46,7 @@ public:
 
 	void BeginPlay() override;
 	void OnPossess(APawn* pawn) override;
+	void OnBlackboard(UBehaviorTree* bt);
 
 	void SetState(EEnemyState eState);
 	void SetType(EEnemyType eType);

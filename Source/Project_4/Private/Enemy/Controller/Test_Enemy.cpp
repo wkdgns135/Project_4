@@ -4,9 +4,16 @@
 ATest_Enemy::ATest_Enemy()
 {
 	PrimaryActorTick.bCanEverTick = true;
+
+	AIControllerClass = ATest_EnemyController::StaticClass();
+	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
+
 	GetCapsuleComponent()->SetCollisionProfileName(TEXT("Enemy"));
 	fsm = CreateDefaultSubobject<UEnemy_FSM>(TEXT("FSM"));
+}
 
+void ATest_Enemy::InitializeEnemy()
+{
 	maxHp = 100;
 	strength = 10;
 	speed = 30.0f;
@@ -14,6 +21,11 @@ ATest_Enemy::ATest_Enemy()
 	attackRadius = 200.0f;
 	sightRange = 1000.0f;
 	currentHp = maxHp;
+
+	bEndAttack = true;
+	bEndHit = true;
+
+	AnimInstance = Cast<UEnemyAnimInstance>(GetMesh()->GetAnimInstance());
 }
 
 void ATest_Enemy::BeginPlay()
@@ -73,13 +85,30 @@ void ATest_Enemy::DropItem()
 
 void ATest_Enemy::SetAttackCheck(bool flag)
 {
-	if (fsm) fsm->SetEndAttack(flag);
+	bEndAttack = flag;
+	if (fsm) fsm->SetEndAttack(bEndAttack);
 }
 
 void ATest_Enemy::SetHitCheck(bool flag)
 {
-	if (fsm) fsm->SetEndHit(flag);
+	bEndHit = flag;
+	if (fsm) fsm->SetEndHit(bEndHit);
 }
+
+bool ATest_Enemy::GetAttackCheck()
+{
+	return bEndAttack;
+}
+
+bool ATest_Enemy::GetHitCheck()
+{
+	return bEndHit;
+}
+
+UEnemyAnimInstance* ATest_Enemy::GetEnemyAnimInstance() { return AnimInstance; }
+UAnimMontage* ATest_Enemy::GetAttackMontage() { return AttackMontage; }
+UAnimMontage* ATest_Enemy::GetHitMontage() { return HitMontage; }
+UAnimMontage* ATest_Enemy::GetDieMontage() { return DieMontage; }
 
 void ATest_Enemy::SetMaxHp(int32 hp) { maxHp = hp; }
 void ATest_Enemy::SetCurrentHp(int32 hp) { currentHp = hp; }

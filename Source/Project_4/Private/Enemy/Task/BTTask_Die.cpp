@@ -21,11 +21,19 @@ EBTNodeResult::Type UBTTask_Die::ExecuteTask(UBehaviorTreeComponent& BTC, uint8*
     if (ControllingPawn == nullptr) return EBTNodeResult::Failed;
 
     Enemy = Cast<ATest_Enemy>(ControllingPawn);
-
+    /*
     UEnemyAnimInstance* AnimInstance = Cast<UEnemyAnimInstance>(ControllingPawn->GetMesh()->GetAnimInstance());
     if (AnimInstance == nullptr) return EBTNodeResult::Failed;
 
     AnimInstance->Montage_Play(DieMontage);
+    */
+
+    //
+    UEnemyAnimInstance* AnimInstance = Enemy->GetEnemyAnimInstance();
+    if (AnimInstance == nullptr) return EBTNodeResult::Failed;
+
+    AnimInstance->Montage_Play(Enemy->GetDieMontage());
+    //
 
     if (!AnimInstance->Montage_GetEndedDelegate()->IsBoundToObject(this))
         AnimInstance->OnMontageEnded.AddUniqueDynamic(this, &UBTTask_Die::OnDieEnded);

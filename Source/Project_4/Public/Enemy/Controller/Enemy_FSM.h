@@ -47,6 +47,8 @@ public:
 	void SetEndAttack(bool flag);
 	void SetEndHit(bool flag);
 
+	void InitializeFSM(ATest_Enemy* Enemy);
+
 	FVector SetTargetFocus();
 
 protected:
@@ -62,5 +64,6 @@ private:
 	float attackRange;
 	bool bEndAttackAnim;
 	bool bEndHitAnim;
+	bool bInit;
 	TObjectPtr<class ATest_EnemyController> aiController;
 };

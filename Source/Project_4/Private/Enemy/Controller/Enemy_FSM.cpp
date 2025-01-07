@@ -5,50 +5,57 @@
 UEnemy_FSM::UEnemy_FSM()
 {
 	PrimaryComponentTick.bCanEverTick = true;
+	bInit = false;
 }
 
-
-void UEnemy_FSM::BeginPlay()
+void UEnemy_FSM::InitializeFSM(ATest_Enemy* Enemy)
 {
-	Super::BeginPlay();
-
 	auto actor = UGameplayStatics::GetActorOfClass(GetWorld(), ATest_Player::StaticClass());
 
 	player = Cast<ATest_Player>(actor);
 
-	enemy = Cast<ATest_Enemy>(GetOwner());
+	//enemy = Cast<ATest_Enemy>(GetOwner());
+	enemy = Enemy;
 
 	aiController = enemy->GetController<ATest_EnemyController>();
 	bEndAttackAnim = true;
 	bEndHitAnim = true;
+	bInit = true;
 }
 
+void UEnemy_FSM::BeginPlay()
+{
+	Super::BeginPlay();
+}
 
 void UEnemy_FSM::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	switch (eState)
+	if (bInit)
 	{
-	case EEnemyState::IDLE:
-		IdleAction(DeltaTime);
-		break;
+		switch (eState)
+		{
+		case EEnemyState::IDLE:
+			IdleAction(DeltaTime);
+			break;
 
-	case EEnemyState::MOVE:
-		MoveAction(DeltaTime);
-		break;
+		case EEnemyState::MOVE:
+			MoveAction(DeltaTime);
+			break;
 
-	case EEnemyState::ATTACK:
-		AttackAction(DeltaTime);
-		break;
+		case EEnemyState::ATTACK:
+			AttackAction(DeltaTime);
+			break;
 
-	case EEnemyState::HIT:
-		HitAction();
-		break;
+		case EEnemyState::HIT:
+			HitAction();
+			break;
 
-	case EEnemyState::DIE:
-		DieAction();
-		break;
+		case EEnemyState::DIE:
+			DieAction();
+			break;
+		}
 	}
 }
 

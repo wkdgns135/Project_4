@@ -6,6 +6,11 @@
 
 ATest_Enemy_Guard::ATest_Enemy_Guard()
 {
+
+}
+
+void ATest_Enemy_Guard::InitializeEnemy()
+{
 	maxHp = 300;
 	strength = 10;
 	speed = 200.0f;
@@ -13,19 +18,18 @@ ATest_Enemy_Guard::ATest_Enemy_Guard()
 	sightRange = 2000.0f;
 	currentHp = maxHp;
 
-
+	if (fsm)
+	{
+		fsm->InitializeFSM(this);
+		fsm->SetEnemyType(EEnemyType::GUARD);
+		fsm->SetEnemyStatus(sightRange, speed, attackRange, maxHp);
+		if (fsm->player) Idle();
+	}
 }
 
 void ATest_Enemy_Guard::BeginPlay()
 {
 	Super::BeginPlay();
-
-	if (fsm)
-	{
-		fsm->SetEnemyType(EEnemyType::GUARD);
-		fsm->SetEnemyStatus(sightRange, speed, attackRange, maxHp);
-		if (fsm->player) Idle();
-	}
 }
 
 void ATest_Enemy_Guard::Tick(float DeltaTime)

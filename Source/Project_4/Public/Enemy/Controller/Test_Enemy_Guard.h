@@ -14,6 +14,7 @@ class PROJECT_4_API ATest_Enemy_Guard : public ATest_Enemy
 public:
 	ATest_Enemy_Guard();
 
+	void InitializeEnemy() override;
 	void Idle() override;
 	void Movement() override;
 	void Attack() override;

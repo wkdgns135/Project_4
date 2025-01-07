@@ -23,13 +23,18 @@ EBTNodeResult::Type UBTTask_Attack::ExecuteTask(UBehaviorTreeComponent& BTC, uin
    if (ControllingPawn == nullptr) return EBTNodeResult::Failed;
    enemy = Cast<ATest_Enemy>(ControllingPawn);
 
+   /*
    AnimInstance = Cast<UEnemyAnimInstance>(ControllingPawn->GetMesh()->GetAnimInstance());
    if (AnimInstance == nullptr) return EBTNodeResult::Failed;
 
-   //enemy->SetAttackCheck(false);
    AnimInstance->Montage_Play(AttackMontage);
-   
-   //AnimInstance->OnMontageEnded.AddDynamic(this, &UBTTask_Attack::OnAttackMontageEnded);
+   */
+   //
+   AnimInstance = enemy->GetEnemyAnimInstance();
+   if (AnimInstance == nullptr) return EBTNodeResult::Failed;
+
+   AnimInstance->Montage_Play(enemy->GetAttackMontage());
+   //
    if (!AnimInstance->OnAttackHitCheck.IsBoundToObject(this))
       AnimInstance->OnAttackHitCheck.AddUObject(this, &UBTTask_Attack::OnAttackHit);
    if (!AnimInstance->OnAttackEndCheck.IsBoundToObject(this))

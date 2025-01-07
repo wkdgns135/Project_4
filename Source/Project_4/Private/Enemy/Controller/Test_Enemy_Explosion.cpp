@@ -7,6 +7,13 @@
 
 ATest_Enemy_Explosion::ATest_Enemy_Explosion()
 {
+	
+}
+
+void ATest_Enemy_Explosion::InitializeEnemy()
+{
+	Super::InitializeEnemy();
+
 	maxHp = 100;
 	strength = 100;
 	speed = 400.0f;
@@ -14,18 +21,19 @@ ATest_Enemy_Explosion::ATest_Enemy_Explosion()
 	attackRadius = 400.0f;
 	sightRange = 2000.0f;
 	currentHp = maxHp;
+
+	if (fsm)
+	{
+		fsm->InitializeFSM(this);
+		fsm->SetEnemyType(EEnemyType::EXPLOSION);
+		fsm->SetEnemyStatus(sightRange, speed, attackRange, maxHp);
+		if (fsm->player) Idle();
+	}
 }
 
 void ATest_Enemy_Explosion::BeginPlay()
 {
 	Super::BeginPlay();
-	
-	if (fsm)
-	{
-		fsm->SetEnemyType(EEnemyType::EXPLOSION);
-		fsm->SetEnemyStatus(sightRange, speed, attackRange, maxHp);
-		if (fsm->player) Idle();
-	}
 }
 
 void ATest_Enemy_Explosion::Tick(float DeltaTime)
@@ -70,13 +78,15 @@ void ATest_Enemy_Explosion::Attack()
 			FDamageEvent DamageEvent;
 			OutHitResult.GetActor()->TakeDamage(strength, DamageEvent, GetController(), this);
 			
-			FTimerHandle TimerHandle;
-			GetWorld()->GetTimerManager().SetTimer(TimerHandle, FTimerDelegate::CreateLambda([&]()
-				{
-					Destroy();
-				}), 0.3f, false);
+			
 		}
 	}
+
+	FTimerHandle TimerHandle;
+	GetWorld()->GetTimerManager().SetTimer(TimerHandle, FTimerDelegate::CreateLambda([&]()
+		{
+			Destroy();
+		}), 0.3f, false);
 	
 #if	ENABLE_DRAW_DEBUG
 	FVector CapsuleOrigin = Start + (End - Start) * 0.5f;
@@ -85,6 +95,7 @@ void ATest_Enemy_Explosion::Attack()
 
 	DrawDebugCapsule(GetWorld(), CapsuleOrigin, CapsuleHalfHeight, attackRadius, FRotationMatrix::MakeFromZ(GetActorForwardVector()).ToQuat(), DrawColor, false, 5.0f);
 #endif
+
 }
 
 void ATest_Enemy_Explosion::GetHit(float dmg)

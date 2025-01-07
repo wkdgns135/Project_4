@@ -16,6 +16,7 @@ const FName ATest_EnemyController::Key_TargetLocation = TEXT("TargetLocation");
 const FName ATest_EnemyController::Key_PlayerLocation = TEXT("PlayerLocation");
 
 ATest_EnemyController::ATest_EnemyController() {
+    /*
     static ConstructorHelpers::FObjectFinder<UBehaviorTree> BTObject(TEXT("BehaviorTree'/Game/MyAI/BT_BaseEnemy_Test.BT_BaseEnemy_Test'"));
     if (BTObject.Succeeded()) {
         UE_LOG(LogTemp, Log, TEXT("BehaviorTree Asset Load Success!"));
@@ -23,6 +24,8 @@ ATest_EnemyController::ATest_EnemyController() {
         blackBoard = Blackboard;
 
     }
+    */
+    //blackBoard = Blackboard;
 }
 
 void ATest_EnemyController::BeginPlay() {
@@ -34,11 +37,19 @@ void ATest_EnemyController::OnPossess(APawn* pawn) {
     Super::OnPossess(pawn);
     
     //UBlackboardComponent* blackBoard = Blackboard;
-
+    /*
     if (UseBlackboard(bt_asset->GetBlackboardAsset(), blackBoard)) {
         RunBehaviorTree(bt_asset);
     }
+    */
+
     //Blackboard->SetValueAsBool(Key_isDead, true);
+}
+
+void ATest_EnemyController::OnBlackboard(UBehaviorTree* bt)
+{
+    blackBoard = Blackboard;
+    UseBlackboard(bt->GetBlackboardAsset(), blackBoard);
 }
 
 void ATest_EnemyController::SetState(EEnemyState eState)
@@ -69,13 +80,13 @@ void ATest_EnemyController::SetState(EEnemyState eState)
     }
 
     if (blackBoard) blackBoard->SetValueAsEnum(Key_eState, (uint8)eState);
-    UE_LOG(LogTemp, Log, TEXT("FSM Call SetState of EnemyController : %s"), *state);
+    //UE_LOG(LogTemp, Log, TEXT("FSM Call SetState of EnemyController : %s"), *state);
 }
 
 void ATest_EnemyController::SetType(EEnemyType eType)
 {
     if (blackBoard) blackBoard->SetValueAsEnum(Key_eType, (uint8)eType);
-    UE_LOG(LogTemp, Log, TEXT("FSM Call SetType of EnemyController"));
+    //UE_LOG(LogTemp, Log, TEXT("FSM Call SetType of EnemyController"));
 }
 
 void ATest_EnemyController::SetTargetLocation(FVector location)

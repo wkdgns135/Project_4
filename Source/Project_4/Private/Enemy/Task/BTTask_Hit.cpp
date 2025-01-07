@@ -23,24 +23,64 @@ EBTNodeResult::Type UBTTask_Hit::ExecuteTask(UBehaviorTreeComponent& BTC, uint8*
    if (ControllingPawn == nullptr) return EBTNodeResult::Failed;
 
    Enemy = Cast<ATest_Enemy>(ControllingPawn);
-
+   /*
    UEnemyAnimInstance* AnimInstance = Cast<UEnemyAnimInstance>(ControllingPawn->GetMesh()->GetAnimInstance());
    if (AnimInstance == nullptr) return EBTNodeResult::Failed;
 
-   //Enemy->SetHitCheck(false);
-
-
    AnimInstance->Montage_Play(HitMontage);
+   */
 
-   if (!AnimInstance->Montage_GetEndedDelegate()->IsBoundToObject(this))
-      AnimInstance->OnMontageEnded.AddUniqueDynamic(this, &UBTTask_Hit::OnHitEnded);
-      
+   //
+   UEnemyAnimInstance* AnimInstance = Enemy->GetEnemyAnimInstance();
+   if (AnimInstance == nullptr) return EBTNodeResult::Failed;
+
+   if (!Enemy->GetAttackCheck())
+   {
+       AnimInstance->Montage_Stop(0.1f, Enemy->GetAttackMontage());
+       Enemy->SetAttackCheck(true);
+
+       FTimerHandle TimerHandle;
+       GetWorld()->GetTimerManager().SetTimer(TimerHandle, FTimerDelegate::CreateLambda([&]()
+           {
+               AnimInstance->Montage_Play(Enemy->GetHitMontage());
+               UE_LOG(LogTemp, Log, TEXT("%s Stop Attack Anim And Play New Hit"), *Enemy->GetName());
+               if (!AnimInstance->Montage_GetEndedDelegate()->IsBoundToObject(this))
+                   AnimInstance->OnMontageEnded.AddUniqueDynamic(this, &UBTTask_Hit::OnHitEnded);
+           }), 0.1f, false);
+   }
+   else if (!Enemy->GetHitCheck())
+   {
+       AnimInstance->Montage_Stop(0.1f, Enemy->GetHitMontage());
+       Enemy->SetHitCheck(true);
+
+       if (Enemy->GetCurrentHp() > 0)
+       {
+           FTimerHandle TimerHandle;
+           GetWorld()->GetTimerManager().SetTimer(TimerHandle, FTimerDelegate::CreateLambda([&]()
+               {
+                   AnimInstance->Montage_Play(Enemy->GetHitMontage());
+                   UE_LOG(LogTemp, Log, TEXT("%s Stop Hit Anim And Play New Hit"), *Enemy->GetName());
+                   if (!AnimInstance->Montage_GetEndedDelegate()->IsBoundToObject(this))
+                       AnimInstance->OnMontageEnded.AddUniqueDynamic(this, &UBTTask_Hit::OnHitEnded);
+               }), 0.1f, false);
+       }
+   }
+   else
+   {
+       AnimInstance->Montage_Play(Enemy->GetHitMontage());
+       UE_LOG(LogTemp, Log, TEXT("%s Hit Start"), *Enemy->GetName());
+       //
+
+       if (!AnimInstance->Montage_GetEndedDelegate()->IsBoundToObject(this))
+           AnimInstance->OnMontageEnded.AddUniqueDynamic(this, &UBTTask_Hit::OnHitEnded);
+   }
+
    return EBTNodeResult::InProgress;
 }
 
 void UBTTask_Hit::OnHitEnded(UAnimMontage* montage, bool Inturrupt)
 {
-   UE_LOG(LogTemp, Log, TEXT("HitEnd"));
+   UE_LOG(LogTemp, Log, TEXT("%s Hit End"), *Enemy->GetName());
    Enemy->SetHitCheck(true);
    FinishLatentTask(*bt_comp, EBTNodeResult::Succeeded);
 }

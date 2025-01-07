@@ -3,6 +3,8 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "Engine/DamageEvents.h"
+#include "Enemy/Controller/Test_EnemyController.h"
+#include "Enemy/Anim/EnemyAnimInstance.h"
 #include "Components/CapsuleComponent.h"
 #include "Test_Enemy.generated.h"
 
@@ -14,11 +16,19 @@ class PROJECT_4_API ATest_Enemy : public ACharacter
 public:
 	ATest_Enemy();
 
+	virtual void InitializeEnemy();
 	virtual void Attack();
 	virtual void Die();
 	
 	void SetAttackCheck(bool flag);
 	void SetHitCheck(bool flag);
+	bool GetAttackCheck();
+	bool GetHitCheck();
+
+	UEnemyAnimInstance* GetEnemyAnimInstance();
+	UAnimMontage* GetAttackMontage();
+	UAnimMontage* GetHitMontage();
+	UAnimMontage* GetDieMontage();
 
 	void SetMaxHp(int32 hp);
 	void SetCurrentHp(int32 hp);
@@ -30,15 +40,10 @@ public:
 	int32 GetStrength();
 
 protected:
-	virtual void BeginPlay() override;
-	virtual void Tick(float DeltaTime) override;
-	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
-	virtual void Idle();
-	virtual void Movement();
-	virtual void GetHit(float dmg);
-	virtual void DropItem();
-
 	int32 currentHp;
+	bool bEndAttack;
+	bool bEndHit;
+	//ATest_EnemyController AIControllerClass;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = FSMComponent)
 	TObjectPtr<class UEnemy_FSM> fsm;
@@ -60,4 +65,23 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, Category = "Enemy")
 	float attackRadius;
+
+	UPROPERTY(EditAnywhere, Category = "Animation")
+	TObjectPtr<class UAnimMontage> AttackMontage;
+
+	UPROPERTY(EditAnywhere, Category = "Animation")
+	TObjectPtr<class UAnimMontage> HitMontage;
+
+	UPROPERTY(EditAnywhere, Category = "Animation")
+	TObjectPtr<class UAnimMontage> DieMontage;
+
+	class UEnemyAnimInstance* AnimInstance;
+
+	virtual void BeginPlay() override;
+	virtual void Tick(float DeltaTime) override;
+	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
+	virtual void Idle();
+	virtual void Movement();
+	virtual void GetHit(float dmg);
+	virtual void DropItem();
 };

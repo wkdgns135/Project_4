@@ -17,6 +17,7 @@ class PROJECT_4_API ATest_Enemy_Explosion : public ATest_Enemy
 public:
 	ATest_Enemy_Explosion();
 
+	void InitializeEnemy() override;
 	void Idle() override;
 	void Movement() override;
 	void Attack() override;
