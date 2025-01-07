@@ -1,8 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
-
-
-#include "Kismet/GameplayStatics.h"
 #include "System/GameManager.h"
+#include "Kismet/GameplayStatics.h"
 #include <Blueprint/WidgetBlueprintLibrary.h>
 
 void UGameManager::InitWeaponData(const EWeaponTier& WeaponTier, const EWeaponType& WeaponType)

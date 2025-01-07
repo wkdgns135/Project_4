@@ -22,11 +22,11 @@ public:
     // Called every frame
     virtual void Tick(float DeltaTime) override;
 
-
+public:
     UFUNCTION()
     void OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit);
-
 	void ShootInDirection(const FVector& ShootDirection, const uint32 Speed);
+	void Deactivate();
 
 private:
     class USphereComponent* CollisionComponent;

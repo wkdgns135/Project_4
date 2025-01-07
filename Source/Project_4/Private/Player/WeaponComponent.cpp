@@ -8,6 +8,7 @@
 #include "Player/Projectile.h"
 #include "Player/Ui/UiComponent.h"
 #include "Player/Ui/UiCameraShake.h"
+#include "System/GenericPool.h"
 #include "System/GameManager.h"
 
 // Sets default values for this component's properties
@@ -55,6 +56,10 @@ void UWeaponComponent::BeginPlay()
     AmmoLimit = AmmoCount;
     UiComponent->SetAmmoText(CurrentAmmoCount, AmmoCount);
     IsShooting = false;
+
+    // Object Pool 초기화
+    ProjectilePool = GetWorld()->SpawnActor<AGenericPool>();
+    ProjectilePool->InitPool<AProjectile>(10);
 }
 
 
@@ -91,9 +96,11 @@ FVector UWeaponComponent::CalculateShootDirection(const FVector& MuzzleLocation,
 
 void UWeaponComponent::SpawnProjectile(const FVector& MuzzleLocation, const FVector& ShootDirection)
 {
-    //NOTE: 오브젝트풀링을 적용할 수 있지만 간단한 프로젝트라 거기까지는 투머치라 적용안했음.
     FActorSpawnParameters SpawnParams;
-    AProjectile* Projectile = GetWorld()->SpawnActor<AProjectile>(AProjectile::StaticClass(), MuzzleLocation, ShootDirection.Rotation(), SpawnParams);
+
+    AProjectile* Projectile = ProjectilePool->GetObject<AProjectile>();
+    //AProjectile* Projectile = GetWorld()->SpawnActor<AProjectile>(AProjectile::StaticClass(), MuzzleLocation, ShootDirection.Rotation(), SpawnParams);
+	Projectile->SetActorLocation(MuzzleLocation);
     if (Projectile)
     {
         Projectile->ShootInDirection(ShootDirection, WeaponData->ProjectileSpeed);

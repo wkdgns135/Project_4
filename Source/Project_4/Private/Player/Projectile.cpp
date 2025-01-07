@@ -33,13 +33,13 @@ AProjectile::AProjectile()
     {
         ProjectileMeshComponent->SetStaticMesh(Mesh.Object);
     }
-    static ConstructorHelpers::FObjectFinder<UMaterial> Material(TEXT("'/Game/StarterContent/Materials/M_Metal_Burnished_Steel.M_Metal_Burnished_Steel'"));
+    static ConstructorHelpers::FObjectFinder<UMaterial> Material(TEXT("/Script/Engine.Material'/Game/Team_4/Sources/Material/M_Bullet.M_Bullet'"));
     if (Material.Succeeded())
     {
         UMaterialInstanceDynamic* ProjectileMaterialInstance = UMaterialInstanceDynamic::Create(Material.Object, ProjectileMeshComponent);
         ProjectileMeshComponent->SetMaterial(0, ProjectileMaterialInstance);
     }
-    ProjectileMeshComponent->SetRelativeScale3D(FVector(0.09f, 0.09f, 0.09f));
+    ProjectileMeshComponent->SetRelativeScale3D(FVector(0.05f, 0.05f, 0.05f));
     ProjectileMeshComponent->SetupAttachment(RootComponent);
 
     
@@ -51,15 +51,13 @@ AProjectile::AProjectile()
 
     // Bind the OnHit function to the collision component's hit event
     CollisionComponent->OnComponentHit.AddDynamic(this, &AProjectile::OnHit);
-
-    // Set the initial lifespan of the projectile
-    InitialLifeSpan = 5.0f;
 }
 
 // Called when the game starts or when spawned
 void AProjectile::BeginPlay()
 {
     Super::BeginPlay();
+	ProjectileMovementComponent->SetActive(false);
 }
 
 // Called every frame
@@ -84,7 +82,9 @@ void AProjectile::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, U
     }
 
     // Destroy the projectile
-    Destroy();
+    //Destroy();
+
+    Deactivate();
 }
 
 void AProjectile::ShootInDirection(const FVector& ShootDirection, const uint32 Speed)
@@ -92,4 +92,17 @@ void AProjectile::ShootInDirection(const FVector& ShootDirection, const uint32 S
     ProjectileMovementComponent->InitialSpeed = Speed;
     ProjectileMovementComponent->MaxSpeed = Speed;
 	ProjectileMovementComponent->Velocity = ShootDirection * ProjectileMovementComponent->InitialSpeed;
+	ProjectileMovementComponent->SetActive(true);
+}
+
+void AProjectile::Deactivate()
+{
+    // 액터를 감춤 
+    SetActorHiddenInGame(true);
+    // 충돌 계산 비활성화
+    SetActorEnableCollision(false);
+    // 틱(업데이트 함수) 중지 
+    SetActorTickEnabled(false);
+
+	ProjectileMovementComponent->SetActive(false);
 }
