@@ -1,5 +1,6 @@
-#include "Enemy/Controller/Enemy_FSM.h"
 #include "Enemy/Controller/Test_Enemy.h"
+#include "Enemy/Controller/Enemy_FSM.h"
+
 
 ATest_Enemy::ATest_Enemy()
 {
@@ -22,9 +23,6 @@ void ATest_Enemy::InitializeEnemy()
 	sightRange = 1000.0f;
 	currentHp = maxHp;
 
-	bEndAttack = true;
-	bEndHit = true;
-
 	AnimInstance = Cast<UEnemyAnimInstance>(GetMesh()->GetAnimInstance());
 }
 
@@ -37,22 +35,10 @@ void ATest_Enemy::Tick(float DeltaTime)
 {
 }
 
-void ATest_Enemy::Idle()
-{
-	if (fsm) fsm->SetIdleState();
-}
-
-void ATest_Enemy::Movement()
-{
-	//if (fsm) fsm->SetMoveState();
-}
-
-void ATest_Enemy::Attack()
-{
-	//if (fsm) fsm->SetAttackState();
-	UE_LOG(LogTemp, Log, TEXT("%s Call Attack() of Enemy class"), *GetName());
-	//적 유형별 클래스인 파생 클래스에서 구현
-}
+void ATest_Enemy::Idle() { if (fsm) fsm->SetIdleState(); }
+void ATest_Enemy::Movement(){ }
+void ATest_Enemy::Attack(){ }
+void ATest_Enemy::GetHit(float dmg) { if (fsm) fsm->SetCurrentHp(currentHp -= dmg); }
 
 float ATest_Enemy::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
@@ -64,17 +50,7 @@ float ATest_Enemy::TakeDamage(float DamageAmount, FDamageEvent const& DamageEven
 	return FinalDamage;
 }
 
-void ATest_Enemy::GetHit(float dmg)
-{
-	if (fsm && currentHp > 0)
-	{
-		//SetHitCheck(false);
-		fsm->SetCurrentHp(currentHp -= dmg);
-		fsm->SetHitState();
-	}
-}
-
-void ATest_Enemy::Die() //die animation 끝나면 호출
+void ATest_Enemy::Die()
 {
 	DropItem();
 	Destroy();
@@ -85,37 +61,8 @@ void ATest_Enemy::DropItem()
 	//어떤 확률로 무엇을 드랍할지 구현 필요.
 }
 
-void ATest_Enemy::SetAttackCheck(bool flag)
-{
-	bEndAttack = flag;
-	if (fsm) fsm->SetEndAttack(bEndAttack);
-}
-
-void ATest_Enemy::SetHitCheck(bool flag)
-{
-	bEndHit = flag;
-	if (fsm) fsm->SetEndHit(bEndHit);
-}
-
-bool ATest_Enemy::GetAttackCheck()
-{
-	return bEndAttack;
-}
-
-bool ATest_Enemy::GetHitCheck()
-{
-	return bEndHit;
-}
-
-void ATest_Enemy::EndHit()
-{
-	if (fsm) fsm->HitAction();
-}
-
-void ATest_Enemy::EndAttack()
-{
-	if (fsm) fsm->AttackAction();
-}
+void ATest_Enemy::EndHit() { if (fsm) fsm->EndHitAction(); }
+void ATest_Enemy::EndAttack() { if (fsm) fsm->EndAttackAction(); }
 
 UEnemyAnimInstance* ATest_Enemy::GetEnemyAnimInstance() { return AnimInstance; }
 UAnimMontage* ATest_Enemy::GetAttackMontage() { return AttackMontage; }

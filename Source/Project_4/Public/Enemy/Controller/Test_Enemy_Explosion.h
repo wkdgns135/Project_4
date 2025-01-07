@@ -1,14 +1,10 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #pragma once
 
 #include "CoreMinimal.h"
 #include "Enemy/Controller/Test_Enemy.h"
 #include "Test_Enemy_Explosion.generated.h"
 
-/**
- * 
- */
+
 UCLASS()
 class PROJECT_4_API ATest_Enemy_Explosion : public ATest_Enemy
 {

@@ -49,16 +49,14 @@ public:
 	void OnPossess(APawn* pawn) override;
 	void OnBlackboard(UBehaviorTree* bt);
 
-	void SetState(EEnemyState eState, FString name);
+	void SetState(EEnemyState eState);
 	void SetType(EEnemyType eType);
 	void SetTargetLocation(FVector location);
 	void SetPlayerLocation(FVector location);
 
-	//EEnemyState eState = EEnemyState::IDLE;
-
 private:
-	UPROPERTY(VisibleAnywhere, Category = "Enemy")
-	TObjectPtr<class UBehaviorTree> bt_asset;
+	//UPROPERTY(VisibleAnywhere, Category = "Enemy")
+	//TObjectPtr<class UBehaviorTree> bt_asset;
 
 	UBlackboardComponent* blackBoard;
 };

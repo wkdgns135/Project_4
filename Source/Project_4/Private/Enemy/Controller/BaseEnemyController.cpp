@@ -14,11 +14,11 @@ const FName ABaseEnemyController::Key_isHit = TEXT("isHit");
 
 
 ABaseEnemyController::ABaseEnemyController() {
-   static ConstructorHelpers::FObjectFinder<UBehaviorTree> BTObject(TEXT("BehaviorTree'/Game/NoCommit/BT_BaseEnemy1.BT_BaseEnemy1'"));
-   if (BTObject.Succeeded()) {
-      UE_LOG(LogTemp, Log, TEXT("BehaviorTree Asset Load Success!"));
-      bt_asset = BTObject.Object;
-   }
+   //static ConstructorHelpers::FObjectFinder<UBehaviorTree> BTObject(TEXT("BehaviorTree'/Game/NoCommit/BT_BaseEnemy1.BT_BaseEnemy1'"));
+   //if (BTObject.Succeeded()) {
+   //   UE_LOG(LogTemp, Log, TEXT("BehaviorTree Asset Load Success!"));
+   //   bt_asset = BTObject.Object;
+   //}
 }
 
 void ABaseEnemyController::BeginPlay() {
@@ -27,9 +27,9 @@ void ABaseEnemyController::BeginPlay() {
 
 void ABaseEnemyController::OnPossess(APawn* pawn) {
    Super::OnPossess(pawn);
-   UBlackboardComponent* blackBoard = Blackboard;
-   if (UseBlackboard(bt_asset->GetBlackboardAsset(), blackBoard)) {
-      RunBehaviorTree(bt_asset);
-   }
-   Blackboard->SetValueAsBool(Key_isDead, true);
+   //UBlackboardComponent* blackBoard = Blackboard;
+   //if (UseBlackboard(bt_asset->GetBlackboardAsset(), blackBoard)) {
+   //   RunBehaviorTree(bt_asset);
+   //}
+   //Blackboard->SetValueAsBool(Key_isDead, true);
 }

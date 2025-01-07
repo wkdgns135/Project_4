@@ -1,14 +1,10 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #pragma once
 
 #include "CoreMinimal.h"
 #include "BehaviorTree/BTTaskNode.h"
 #include "BT_Move_Task.generated.h"
 
-/**
- * 
- */
+
 UCLASS()
 class PROJECT_4_API UBT_Move_Task : public UBTTaskNode
 {

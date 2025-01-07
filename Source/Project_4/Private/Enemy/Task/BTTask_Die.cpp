@@ -36,10 +36,10 @@ EBTNodeResult::Type UBTTask_Die::ExecuteTask(UBehaviorTreeComponent& BTC, uint8*
 
     AnimInstance->Montage_Play(Enemy->GetDieMontage());
     //
-
+    /*
     if (!AnimInstance->Montage_GetEndedDelegate()->IsBoundToObject(this))
         AnimInstance->OnMontageEnded.AddUniqueDynamic(this, &UBTTask_Die::OnDieEnded);
-
+        */
     return EBTNodeResult::InProgress;
 }
 

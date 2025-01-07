@@ -31,8 +31,10 @@ public:
 
 	void IdleAction(float DeltaTime);
 	void MoveAction(float DeltaTime);
-	void AttackAction();
-	void HitAction();
+	void EndAttackAction();
+	void StopAttackAction(float delay);
+	void EndHitAction();
+	void StopHitAction(float delay);
 	void DieAction();
 
 	void SetIdleState();
@@ -47,6 +49,8 @@ public:
 	void SetCurrentHp(int32 hp);
 	void SetEndAttack(bool flag);
 	void SetEndHit(bool flag);
+	bool GetEndAttack();
+	bool GetEndHit();
 
 	void InitializeFSM(ATest_Enemy* Enemy);
 
@@ -64,7 +68,7 @@ private:
 	float sightRange;
 	float attackRange;
 	bool bEndAttackAnim;
-	//bool bEndHitAnim;
+	bool bEndHitAnim;
 	bool bInit;
 	TObjectPtr<class ATest_EnemyController> aiController;
 };

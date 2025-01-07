@@ -1,6 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
-
 #include "Enemy/Controller/Test_Enemy_Explosion.h"
 #include "Enemy/Controller/Enemy_FSM.h"
 
@@ -85,7 +82,6 @@ void ATest_Enemy_Explosion::Attack()
 	FTimerHandle TimerHandle;
 	GetWorld()->GetTimerManager().SetTimer(TimerHandle, FTimerDelegate::CreateLambda([&]()
 		{
-			UE_LOG(LogTemp, Warning, TEXT("%s Destroy"), *GetName());
 			Destroy();
 		}), 0.3f, false);
 	

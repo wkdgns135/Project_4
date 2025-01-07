@@ -1,5 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #pragma once
 
 #include "CoreMinimal.h"
@@ -7,9 +5,7 @@
 #include "Enemy/Controller/Test_Enemy.h"
 #include "BTTask_Hit.generated.h"
 
-/**
- * 
- */
+
 UCLASS()
 class PROJECT_4_API UBTTask_Hit : public UBTTaskNode
 {
@@ -17,16 +13,9 @@ class PROJECT_4_API UBTTask_Hit : public UBTTaskNode
 
 public:
 	UBTTask_Hit();
-
 	EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& BTC, uint8* NodeMemory);
-	
-	UPROPERTY(EditAnywhere)
-	UAnimMontage* HitMontage;
 
 private:
 	UBehaviorTreeComponent* bt_comp;
 	ATest_Enemy* Enemy;
-
-	UFUNCTION()
-	void OnHitEnded(UAnimMontage* montage, bool Inturrupt);
 };
