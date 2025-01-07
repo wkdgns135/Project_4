@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
 #include "../PlayerData.h"
+#include "InventorySlotWidget.h"
 #include "InventoryWidget.generated.h"
 
 /**
@@ -22,7 +23,7 @@ protected:
     class UUniformGridPanel* InventoryGrid;
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
-    UInventoryWidget *InventorySlot;
+    TSubclassOf<class UUserWidget> InventorySlotWidget;
 
     UFUNCTION(BlueprintCallable, Category = "Ui")
     void HideInventory();

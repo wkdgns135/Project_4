@@ -27,12 +27,10 @@ void UInventoryWidget::UpdateInventory(const TArray<FWeaponSaveData>& WeaponSave
 
 void UInventoryWidget::AddItemToGrid(const EWeaponType &type, const EWeaponTier &tier, int32 Index)
 {
-    if (!InventorySlot) return;
-    UInventorySlotWidget* NewSlot = CreateWidget<UInventorySlotWidget>(GetWorld(), InventorySlot->StaticClass());
+    if (!InventorySlotWidget) return;
+    UInventorySlotWidget* NewSlot = Cast<UInventorySlotWidget>(CreateWidget<UUserWidget>(GetWorld(), InventorySlotWidget));
     if (!NewSlot) return;
-
-	NewSlot->Type = type;
-	NewSlot->Tier = tier;
+	NewSlot->InitSlot(type, tier);
 
     static const UEnum* WeaponTypeEnum = FindObject<UEnum>(ANY_PACKAGE, TEXT("EWeaponType"), true);
     static const UEnum* WeaponTierEnum = FindObject<UEnum>(ANY_PACKAGE, TEXT("EWeaponTier"), true);
