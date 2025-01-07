@@ -18,7 +18,8 @@ enum class EEnemyType : uint8
 UENUM(BlueprintType)
 enum class EEnemyState : uint8
 {
-	IDLE = 0 UMETA(DisplayName = "IDLE"),
+	WAIT = 0 UMETA(DisplayName = "WAIT"),
+	IDLE UMETA(DisplayName = "IDLE"),
 	MOVE UMETA(DisplayName = "MOVE"),
 	ATTACK UMETA(DisplayName = "ATTACK"),
 	HIT UMETA(DisplayName = "HIT"),
@@ -48,7 +49,7 @@ public:
 	void OnPossess(APawn* pawn) override;
 	void OnBlackboard(UBehaviorTree* bt);
 
-	void SetState(EEnemyState eState);
+	void SetState(EEnemyState eState, FString name);
 	void SetType(EEnemyType eType);
 	void SetTargetLocation(FVector location);
 	void SetPlayerLocation(FVector location);

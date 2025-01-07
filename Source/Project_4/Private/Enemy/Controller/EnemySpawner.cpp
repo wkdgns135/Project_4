@@ -57,6 +57,7 @@ void AEnemySpawner::Tick(float DeltaTime)
 void AEnemySpawner::SpawnEnemy()
 {
 	SpawnEnemyExplosion();
+	//SpawnEnemyGuard();
 	/*
 	EEnemyType EnemyType = (EEnemyType)FMath::RandRange(0, 1);
 

@@ -26,19 +26,7 @@ void ATest_Enemy_Guard::InitializeEnemy()
 		fsm->SetEnemyStatus(sightRange, speed, attackRange, maxHp);
 		if (fsm->player) Idle();
 	}
-}
 
-void ATest_Enemy_Guard::BeginPlay()
-{
-	Super::BeginPlay();
-
-	if (fsm)
-	{
-		fsm->SetEnemyType(EEnemyType::GUARD);
-		fsm->SetEnemyStatus(sightRange, speed, attackRange, maxHp);
-		if (fsm->player) Idle();
-	}
-	
 	FActorSpawnParameters SpawnParams;
 	SpawnParams.Owner = this;
 	SpawnParams.Instigator = GetInstigator();
@@ -47,6 +35,11 @@ void ATest_Enemy_Guard::BeginPlay()
 	SpawnActor->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, TEXT("FX_Trail_02_R"));
 	Weapon = Cast<AEnemyWeapon>(SpawnActor);
 	Weapon->SetWeaponOwner(this);
+}
+
+void ATest_Enemy_Guard::BeginPlay()
+{
+	Super::BeginPlay();
 }
 
 void ATest_Enemy_Guard::Tick(float DeltaTime)

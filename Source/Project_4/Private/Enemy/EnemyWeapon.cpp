@@ -51,8 +51,8 @@ void AEnemyWeapon::EndAttackState()
 
 void AEnemyWeapon::SetWeaponOwner(ACharacter* Character)
 {
-   auto Owner = Cast<ATest_Enemy>(Character);
-	if (Owner != nullptr) this->Owner = Owner;
+    auto Temp = Cast<ATest_Enemy>(Character);
+	if (Temp != nullptr) Owner = Temp;
 }
 
 void AEnemyWeapon::OnWeaponOverlap(UPrimitiveComponent* OverlapedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& Result)
@@ -65,7 +65,7 @@ void AEnemyWeapon::OnWeaponOverlap(UPrimitiveComponent* OverlapedComponent, AAct
 		UE_LOG(LogCore, Log, TEXT("Attack Player Collison!!"));
 		EndAttackState();
 		FDamageEvent DamageEvent;
-		OtherActor->TakeDamage(Owner->GetStrength(), DamageEvent, this->Owner->GetController(), this->Owner);
+		OtherActor->TakeDamage(Owner->GetStrength(), DamageEvent, Owner->GetController(), Owner);
 	}
 	
 }

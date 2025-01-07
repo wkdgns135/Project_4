@@ -17,7 +17,7 @@ void ATest_Enemy_Explosion::InitializeEnemy()
 	maxHp = 100;
 	strength = 100;
 	speed = 400.0f;
-	attackRange = 100.0f;
+	attackRange = 200.0f;
 	attackRadius = 400.0f;
 	sightRange = 2000.0f;
 	currentHp = maxHp;
@@ -77,17 +77,19 @@ void ATest_Enemy_Explosion::Attack()
 		{
 			FDamageEvent DamageEvent;
 			OutHitResult.GetActor()->TakeDamage(strength, DamageEvent, GetController(), this);
-			
-			
 		}
 	}
+	
+	if (fsm) fsm->SetWaitState();
 
 	FTimerHandle TimerHandle;
 	GetWorld()->GetTimerManager().SetTimer(TimerHandle, FTimerDelegate::CreateLambda([&]()
 		{
+			UE_LOG(LogTemp, Warning, TEXT("%s Destroy"), *GetName());
 			Destroy();
 		}), 0.3f, false);
 	
+	/*
 #if	ENABLE_DRAW_DEBUG
 	FVector CapsuleOrigin = Start + (End - Start) * 0.5f;
 	float CapsuleHalfHeight = attackRange * 0.5f;
@@ -95,7 +97,7 @@ void ATest_Enemy_Explosion::Attack()
 
 	DrawDebugCapsule(GetWorld(), CapsuleOrigin, CapsuleHalfHeight, attackRadius, FRotationMatrix::MakeFromZ(GetActorForwardVector()).ToQuat(), DrawColor, false, 5.0f);
 #endif
-
+*/
 }
 
 void ATest_Enemy_Explosion::GetHit(float dmg)

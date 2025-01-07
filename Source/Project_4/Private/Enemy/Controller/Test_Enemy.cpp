@@ -44,12 +44,13 @@ void ATest_Enemy::Idle()
 
 void ATest_Enemy::Movement()
 {
-	if (fsm) fsm->SetMoveState();
+	//if (fsm) fsm->SetMoveState();
 }
 
 void ATest_Enemy::Attack()
 {
-	if (fsm) fsm->SetAttackState();
+	//if (fsm) fsm->SetAttackState();
+	UE_LOG(LogTemp, Log, TEXT("%s Call Attack() of Enemy class"), *GetName());
 	//적 유형별 클래스인 파생 클래스에서 구현
 }
 
@@ -67,6 +68,7 @@ void ATest_Enemy::GetHit(float dmg)
 {
 	if (fsm && currentHp > 0)
 	{
+		//SetHitCheck(false);
 		fsm->SetCurrentHp(currentHp -= dmg);
 		fsm->SetHitState();
 	}
@@ -103,6 +105,16 @@ bool ATest_Enemy::GetAttackCheck()
 bool ATest_Enemy::GetHitCheck()
 {
 	return bEndHit;
+}
+
+void ATest_Enemy::EndHit()
+{
+	if (fsm) fsm->HitAction();
+}
+
+void ATest_Enemy::EndAttack()
+{
+	if (fsm) fsm->AttackAction();
 }
 
 UEnemyAnimInstance* ATest_Enemy::GetEnemyAnimInstance() { return AnimInstance; }

@@ -31,7 +31,7 @@ public:
 
 	void IdleAction(float DeltaTime);
 	void MoveAction(float DeltaTime);
-	void AttackAction(float DeltaTime);
+	void AttackAction();
 	void HitAction();
 	void DieAction();
 
@@ -40,6 +40,7 @@ public:
 	void SetAttackState();
 	void SetHitState();
 	void SetDieState();
+	void SetWaitState();
 
 	void SetEnemyType(EEnemyType enemyType);
 	void SetEnemyStatus(float sightR, float spd, float range, int32 hp);
@@ -63,7 +64,7 @@ private:
 	float sightRange;
 	float attackRange;
 	bool bEndAttackAnim;
-	bool bEndHitAnim;
+	//bool bEndHitAnim;
 	bool bInit;
 	TObjectPtr<class ATest_EnemyController> aiController;
 };

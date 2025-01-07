@@ -30,6 +30,8 @@ private:
 	ATest_Enemy* enemy;
 	class UEnemyAnimInstance* AnimInstance;
 
-	void OnAttackEnd();
+	UFUNCTION()
+	void OnAttackEnd(UAnimMontage* montage, bool Inturrupt);
+
 	void OnAttackHit();
 };

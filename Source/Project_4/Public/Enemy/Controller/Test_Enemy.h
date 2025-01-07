@@ -24,6 +24,8 @@ public:
 	void SetHitCheck(bool flag);
 	bool GetAttackCheck();
 	bool GetHitCheck();
+	void EndHit();
+	void EndAttack();
 
 	UEnemyAnimInstance* GetEnemyAnimInstance();
 	UAnimMontage* GetAttackMontage();

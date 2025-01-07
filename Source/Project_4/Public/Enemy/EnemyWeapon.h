@@ -25,7 +25,7 @@ protected:
 private:
 	UPROPERTY(EditAnywhere, Category = "Weapon", meta=(AllowPrivateAccess = "true"))
 	UStaticMeshComponent* Weapon;
-	ATest_Enemy* Owner;
+	class ATest_Enemy* Owner;
 
 	UFUNCTION()
 	void OnWeaponOverlap(UPrimitiveComponent* OverlapedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& Result);

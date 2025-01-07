@@ -33,25 +33,39 @@ EBTNodeResult::Type UBTTask_Attack::ExecuteTask(UBehaviorTreeComponent& BTC, uin
    AnimInstance = enemy->GetEnemyAnimInstance();
    if (AnimInstance == nullptr) return EBTNodeResult::Failed;
 
+   enemy->SetAttackCheck(false);
    AnimInstance->Montage_Play(enemy->GetAttackMontage());
+
    //
+   UE_LOG(LogTemp, Warning, TEXT("%s Attack Start"), *enemy->GetName());
+   /*
    if (!AnimInstance->OnAttackHitCheck.IsBoundToObject(this))
-      AnimInstance->OnAttackHitCheck.AddUObject(this, &UBTTask_Attack::OnAttackHit);
+        AnimInstance->OnAttackHitCheck.AddUObject(this, &UBTTask_Attack::OnAttackHit);
+        */
+   /*
    if (!AnimInstance->OnAttackEndCheck.IsBoundToObject(this))
       AnimInstance->OnAttackEndCheck.AddUObject(this, &UBTTask_Attack::OnAttackEnd);
-
+      */
+   
+   if (!AnimInstance->Montage_GetEndedDelegate()->IsBoundToObject(this))
+       AnimInstance->OnMontageEnded.AddUniqueDynamic(this, &UBTTask_Attack::OnAttackEnd);
+   /*
+   if (!AnimInstance->Montage_GetEndedDelegate()->IsBoundToObject(this))
+       AnimInstance->OnMontageEnded.AddDynamic(this, &UBTTask_Attack::OnAttackEnd);
+       */
    return EBTNodeResult::InProgress;
 }
 
 void UBTTask_Attack::OnAttackHit() {
-   UE_LOG(LogTemp, Log, TEXT("Attack hit timing"));
+   UE_LOG(LogTemp, Log, TEXT("%s Call Attack() of Enemy class"), *enemy->GetName());
    //TODO : binding Attack
    enemy->Attack();
 }
 
-void UBTTask_Attack::OnAttackEnd() {
-   UE_LOG(LogTemp, Log, TEXT("Attack End!!"));
+void UBTTask_Attack::OnAttackEnd(UAnimMontage* montage, bool Inturrupt) {
+   UE_LOG(LogTemp, Log, TEXT("%s Attack End!!"), *enemy->GetName());
    enemy->SetAttackCheck(true);
+   enemy->EndAttack();
    FinishLatentTask(*bt_comp, EBTNodeResult::Succeeded);
 
 }
