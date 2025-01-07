@@ -22,7 +22,7 @@ protected:
     class UUniformGridPanel* InventoryGrid;
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
-    TSubclassOf<class UUserWidget> InventorySlotClass;
+    UInventoryWidget *InventorySlot;
 
     UFUNCTION(BlueprintCallable, Category = "Ui")
     void HideInventory();

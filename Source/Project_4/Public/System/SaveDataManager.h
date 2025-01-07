@@ -11,11 +11,13 @@
  * 
  */
 UCLASS()
-class PROJECT_4_API USaveDataManager : public UGameInstance
+class PROJECT_4_API USaveDataManager : public UGameInstanceSubsystem
 {
 	GENERATED_BODY()
-	
+private:
+	int32 MaxWeaponData;
 public:
 	TArray<FWeaponSaveData> GetWeaponSaveData();
 	UPlayerData* CreateSaveData();
+	void AddWeapon(const FWeaponSaveData data);
 };

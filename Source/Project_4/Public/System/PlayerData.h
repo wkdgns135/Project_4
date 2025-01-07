@@ -30,7 +30,11 @@ struct FWeaponSaveData
 {
 	GENERATED_BODY()
 public:
+	FWeaponSaveData(): WeaponType(EWeaponType::None), WeaponTier(EWeaponTier::None) {}
+	FWeaponSaveData(EWeaponType Type, EWeaponTier Tier): WeaponType(Type), WeaponTier(Tier) {}
+	UPROPERTY()
 	EWeaponType WeaponType;
+	UPROPERTY()
 	EWeaponTier WeaponTier;
 };
 

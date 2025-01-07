@@ -2,6 +2,7 @@
 
 
 #include "System/Ui/InventoryWidget.h"
+#include "System/Ui/InventorySlotWidget.h"
 #include "Components/UniformGridPanel.h"
 #include "Components/Button.h"
 #include "Components/TextBlock.h"
@@ -26,10 +27,12 @@ void UInventoryWidget::UpdateInventory(const TArray<FWeaponSaveData>& WeaponSave
 
 void UInventoryWidget::AddItemToGrid(const EWeaponType &type, const EWeaponTier &tier, int32 Index)
 {
-    if (!InventorySlotClass) return;
-
-    UUserWidget* NewSlot = CreateWidget<UUserWidget>(GetWorld(), InventorySlotClass);
+    if (!InventorySlot) return;
+    UInventorySlotWidget* NewSlot = CreateWidget<UInventorySlotWidget>(GetWorld(), InventorySlot->StaticClass());
     if (!NewSlot) return;
+
+	NewSlot->Type = type;
+	NewSlot->Tier = tier;
 
     static const UEnum* WeaponTypeEnum = FindObject<UEnum>(ANY_PACKAGE, TEXT("EWeaponType"), true);
     static const UEnum* WeaponTierEnum = FindObject<UEnum>(ANY_PACKAGE, TEXT("EWeaponTier"), true);

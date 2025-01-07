@@ -9,15 +9,21 @@
 void AMainMenuGameMode::BeginPlay()
 {
     Super::BeginPlay();
+    AddLegendWeapon();
 }
 
 void AMainMenuGameMode::ShowInventory()
 {
     if (InventoryWidget)
     {
-        TArray<FWeaponSaveData> PlayerData = Cast<USaveDataManager>(GetGameInstance())->GetWeaponSaveData();
+        TArray<FWeaponSaveData> PlayerData = GetGameInstance()->GetSubsystem<USaveDataManager>()->GetWeaponSaveData();
         InventoryWidget->AddToViewport();
         InventoryWidget->UpdateInventory(PlayerData);
     }
+}
 
+void AMainMenuGameMode::AddLegendWeapon()
+{
+    UE_LOG(LogTemp, Display, TEXT("Activate cheat"));
+    GetGameInstance()->GetSubsystem<USaveDataManager>()->AddWeapon(FWeaponSaveData(EWeaponType::AR, EWeaponTier::Legend));
 }

@@ -21,6 +21,9 @@ public:
     UFUNCTION(BlueprintCallable, Category = "UI")
     void ShowInventory();
 
+    UFUNCTION(BlueprintCallable, Category = "Editor Utilities")
+    void AddLegendWeapon();
+
 private:
     void InitPlayerData();
 };
