@@ -34,6 +34,11 @@ private:
 
 	UPROPERTY(editanywhere, category = input, meta = (allowprivateaccess = true))
 	class UInputAction* ReloadAction;
+	UPROPERTY(editanywhere, category = input, meta = (allowprivateaccess = true))
+	class UAnimMontage* FireMontage;
+	UPROPERTY(editanywhere, category = input, meta = (allowprivateaccess = true))
+	class UAnimMontage* ReloadMontage;
+
 
 	UPROPERTY(editanywhere, category = input, meta = (allowprivateaccess = true))
 	float walkSpeed;

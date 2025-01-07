@@ -117,6 +117,8 @@ void APlayerCharacter::Fire()
 {
 	if (!WeaponComponent)return;
 	WeaponComponent->FireWeapon();
+	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+	AnimInstance->Montage_Play(FireMontage);
 }
 
 void APlayerCharacter::StopFire()
@@ -129,6 +131,8 @@ void APlayerCharacter::Reload()
 {
 	if (!WeaponComponent)return;
 	WeaponComponent->ReloadWeapon();
+	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+	AnimInstance->Montage_Play(ReloadMontage);
 }
 
 void APlayerCharacter::Move(const FInputActionValue& Value)
