@@ -17,7 +17,7 @@ public:
 	void InitializeEnemy() override;
 	void Idle() override;
 	void Movement() override;
-	void Attack() override;
+	virtual void Attack() override;
 	void GetHit(float dmg) override;
 	void Die() override;
 	void DropItem() override;
@@ -25,4 +25,9 @@ public:
 private:
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
+
+	void SetWeapon();
+	UPROPERTY(EditAnywhere, Category="Test", meta = (AllowPrivateAccess = "true"))
+	class AEnemyWeapon* Weapon;
+
 };
