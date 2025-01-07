@@ -9,7 +9,6 @@
 void AMainMenuGameMode::BeginPlay()
 {
     Super::BeginPlay();
-    AddLegendWeapon();
 }
 
 void AMainMenuGameMode::ShowInventory()

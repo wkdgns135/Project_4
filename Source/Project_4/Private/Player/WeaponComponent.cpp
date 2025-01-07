@@ -99,11 +99,9 @@ void UWeaponComponent::SpawnProjectile(const FVector& MuzzleLocation, const FVec
     FActorSpawnParameters SpawnParams;
 
     AProjectile* Projectile = ProjectilePool->GetObject<AProjectile>();
-    //AProjectile* Projectile = GetWorld()->SpawnActor<AProjectile>(AProjectile::StaticClass(), MuzzleLocation, ShootDirection.Rotation(), SpawnParams);
-	Projectile->SetActorLocation(MuzzleLocation);
     if (Projectile)
     {
-        Projectile->ShootInDirection(ShootDirection, WeaponData->ProjectileSpeed);
+        Projectile->Activate(MuzzleLocation, ShootDirection, WeaponData->ProjectileSpeed);
     }
 }
 

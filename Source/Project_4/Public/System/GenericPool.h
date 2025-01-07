@@ -6,7 +6,6 @@
 #include "GameFramework/Actor.h"
 #include "GenericPool.generated.h"
 
-//HERE: 제네릭 오브젝트 풀 클래스 선언부
 UCLASS()
 class PROJECT_4_API AGenericPool : public AActor
 {

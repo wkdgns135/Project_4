@@ -16,6 +16,8 @@ AProjectile::AProjectile()
     CollisionComponent->InitSphereRadius(15.0f);
     CollisionComponent->SetCollisionProfileName(TEXT("BlockAll"));
     CollisionComponent->SetNotifyRigidBodyCollision(true); // Enable hit events
+    CollisionComponent->SetCollisionObjectType(ECC_GameTraceChannel1); // 사용자 정의 채널
+    CollisionComponent->SetCollisionResponseToChannel(ECC_Visibility, ECR_Ignore); // 레이 트레이스 채널 무시
     RootComponent = CollisionComponent;
 
     // Create and configure a projectile movement component
@@ -81,17 +83,15 @@ void AProjectile::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, U
         UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ImpactEffect, Hit.ImpactPoint, Hit.ImpactNormal.Rotation());
     }
 
-    // Destroy the projectile
-    //Destroy();
-
     Deactivate();
 }
 
-void AProjectile::ShootInDirection(const FVector& ShootDirection, const uint32 Speed)
+void AProjectile::Activate(const FVector& Location, const FVector& ShootDirection, const uint32 Speed)
 {
+	SetActorLocation(Location);
     ProjectileMovementComponent->InitialSpeed = Speed;
     ProjectileMovementComponent->MaxSpeed = Speed;
-	ProjectileMovementComponent->Velocity = ShootDirection * ProjectileMovementComponent->InitialSpeed;
+    ProjectileMovementComponent->Velocity = ShootDirection * ProjectileMovementComponent->InitialSpeed;
 	ProjectileMovementComponent->SetActive(true);
 }
 
