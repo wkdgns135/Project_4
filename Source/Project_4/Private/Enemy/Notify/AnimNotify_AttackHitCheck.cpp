@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Enemy/Task/AnimNotify_AttackHitCheck.h"
+#include "Enemy/Notify/AnimNotify_AttackHitCheck.h"
 #include "Enemy/Task/EnemyAnimationAttackInterface.h"
 #include "Enemy/Controller/Test_Enemy.h"
 
