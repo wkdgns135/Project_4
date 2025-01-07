@@ -93,7 +93,7 @@ void UEnemy_FSM::MoveAction(float DeltaTime)
 	{
 		enemy->GetCharacterMovement()->MaxWalkSpeed = moveSpeed * 2.0f;
 
-		if (SetTargetFocus().Size() <= attackRange - 50)
+		if (SetTargetFocus().Size() <= attackRange)
 		{
 			SetAttackState();
 		}
@@ -106,7 +106,7 @@ void UEnemy_FSM::AttackAction()
 	if (player && enemy)
 	{
 		//if (bEndAttackAnim && SetTargetFocus().Size() >= attackRange) SetMoveState();
-		if(SetTargetFocus().Size() >= attackRange + 100) SetMoveState();
+		if(SetTargetFocus().Size() >= attackRange) SetMoveState();
 	}
 }
 

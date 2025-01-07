@@ -89,5 +89,5 @@ void UBTTask_Hit::OnHitEnded(UAnimMontage* montage, bool Inturrupt)
    UE_LOG(LogTemp, Log, TEXT("%s Hit End"), *Enemy->GetName());
    Enemy->EndHit();
    Enemy->SetHitCheck(true);
-   FinishLatentTask(*bt_comp, EBTNodeResult::Succeeded);
+   //FinishLatentTask(*bt_comp, EBTNodeResult::Succeeded);
 }

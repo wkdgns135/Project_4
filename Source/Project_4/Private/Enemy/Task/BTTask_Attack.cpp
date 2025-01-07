@@ -66,7 +66,7 @@ void UBTTask_Attack::OnAttackEnd(UAnimMontage* montage, bool Inturrupt) {
    UE_LOG(LogTemp, Log, TEXT("%s Attack End!!"), *enemy->GetName());
    enemy->SetAttackCheck(true);
    enemy->EndAttack();
-   FinishLatentTask(*bt_comp, EBTNodeResult::Succeeded);
+   //FinishLatentTask(*bt_comp, EBTNodeResult::Succeeded);
 
 }
 /*
