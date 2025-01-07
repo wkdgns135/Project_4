@@ -43,6 +43,7 @@ private:
     int32 AmmoCount;
     int32 AmmoLimit;
     bool IsShooting;
+    float LastFireTime;
 
     AGenericPool *ProjectilePool;
 

@@ -56,7 +56,7 @@ void UWeaponComponent::BeginPlay()
     AmmoLimit = AmmoCount;
     UiComponent->SetAmmoText(CurrentAmmoCount, AmmoCount);
     IsShooting = false;
-
+	LastFireTime = 0.0f;
     // Object Pool 초기화
     ProjectilePool = GetWorld()->SpawnActor<AGenericPool>();
     ProjectilePool->InitPool<AProjectile>(10);
@@ -117,17 +117,25 @@ void UWeaponComponent::ApplyCameraShake() const
 void UWeaponComponent::FireWeapon()
 {
     IsShooting = true;
-    Shoot();
+
+    float CurrentTime = GetWorld()->GetTimeSeconds();
+    // 발사 간격 확인
+    if (CurrentTime - LastFireTime > 1.0f / WeaponData->FireRate)
+    {
+        Shoot();
+    }
     GetWorld()->GetTimerManager().SetTimer(
         ShootingTimerHandle, this, &UWeaponComponent::Shoot, 1.0f / WeaponData->FireRate, true
-    ); // FireRate = 초당 발사 횟수
+    ); // 연사 타이머 설정
 }
 
 void UWeaponComponent::StopFireWeapon()
 {
     IsShooting = false;
-    GetWorld()->GetTimerManager().ClearTimer(ShootingTimerHandle);
+    GetWorld()->GetTimerManager().ClearTimer(ShootingTimerHandle); // 타이머 중지
 }
+
+
 
 void UWeaponComponent::Shoot(){
     if (CurrentAmmoCount == 0 || !SkeletalMeshComponent || !UiComponent || !IsShooting) return;
@@ -152,6 +160,8 @@ void UWeaponComponent::Shoot(){
 
     CurrentAmmoCount--;
     UiComponent->SetAmmoText(CurrentAmmoCount, AmmoCount);
+
+	LastFireTime = GetWorld()->GetTimeSeconds();// 마지막 발사시간 갱신
 }
 
 void UWeaponComponent::ReloadWeapon()
