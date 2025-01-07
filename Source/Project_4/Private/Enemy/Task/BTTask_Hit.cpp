@@ -77,8 +77,10 @@ EBTNodeResult::Type UBTTask_Hit::ExecuteTask(UBehaviorTreeComponent& BTC, uint8*
        if (!AnimInstance->Montage_GetEndedDelegate()->IsBoundToObject(this))
            AnimInstance->OnMontageEnded.AddDynamic(this, &UBTTask_Hit::OnHitEnded);
            */
+       /*
        if (!AnimInstance->Montage_GetEndedDelegate()->IsBoundToObject(this))
            AnimInstance->OnMontageEnded.AddUniqueDynamic(this, &UBTTask_Hit::OnHitEnded);
+           */
    }
 
    return EBTNodeResult::InProgress;

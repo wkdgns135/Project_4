@@ -32,6 +32,8 @@ EBTNodeResult::Type UBTTask_Die::ExecuteTask(UBehaviorTreeComponent& BTC, uint8*
     UEnemyAnimInstance* AnimInstance = Enemy->GetEnemyAnimInstance();
     if (AnimInstance == nullptr) return EBTNodeResult::Failed;
 
+    //if (AnimInstance->Montage_IsPlaying(Enemy->GetHitMontage())) AnimInstance->Montage_Stop(0.0f, Enemy->GetHitMontage());
+
     AnimInstance->Montage_Play(Enemy->GetDieMontage());
     //
 
