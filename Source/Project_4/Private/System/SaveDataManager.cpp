@@ -4,6 +4,12 @@
 #include "System/SaveDataManager.h"
 #include <Kismet/GameplayStatics.h>
 
+void USaveDataManager::Initialize(FSubsystemCollectionBase& Collection)
+{
+	Super::Initialize(Collection);
+	MaxWeaponData = 25;
+}
+
 TArray<FWeaponSaveData> USaveDataManager::GetWeaponSaveData()
 {
     UPlayerData* PlayerData = Cast<UPlayerData>(UGameplayStatics::LoadGameFromSlot("Player", 0));
@@ -32,10 +38,10 @@ void USaveDataManager::AddWeapon(const FWeaponSaveData data)
 	NewPlayerData->WeaponSaveData = GetWeaponSaveData();
 
 	//FIX ME: 싱글톤 MaxWeaponData 메모리 접근이 안되는 문제 해결
-	//if (NewPlayerData->WeaponSaveData.Num() >= MaxWeaponData) {
-	//	UE_LOG(LogClass, Warning, TEXT("Weapon data out of range!"));
-	//	return;
-	//}
+	if (NewPlayerData->WeaponSaveData.Num() >= MaxWeaponData) {
+		UE_LOG(LogClass, Warning, TEXT("Weapon data out of range!"));
+		return;
+	}
 
 	NewPlayerData->WeaponSaveData.Add(data);
 	if (!UGameplayStatics::SaveGameToSlot(NewPlayerData, "Player", 0))

@@ -16,6 +16,8 @@ class PROJECT_4_API USaveDataManager : public UGameInstanceSubsystem
 	GENERATED_BODY()
 private:
 	int32 MaxWeaponData;
+protected:
+	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
 public:
 	TArray<FWeaponSaveData> GetWeaponSaveData();
 	UPlayerData* CreateSaveData();
