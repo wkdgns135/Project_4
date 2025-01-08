@@ -61,34 +61,34 @@ void AEnemySpawner::Tick(float DeltaTime)
 
 void AEnemySpawner::SpawnEnemy()
 {
-	SpawnEnemyExplosion();
+	//SpawnEnemyExplosion();
 	//SpawnEnemyGuard();
 	//SpawnEnemyMelee();
 	
-	//EEnemyType EnemyType = (EEnemyType)(FMath::RandRange(0, 2));
+	EEnemyType EnemyType = (EEnemyType)(FMath::RandRange(0, 2));
 
-	//switch (EnemyType)
-	//{
-	//case EEnemyType::GUARD:
-	//	SpawnEnemyGuard();
-	//	break;
+	switch (EnemyType)
+	{
+	case EEnemyType::GUARD:
+		SpawnEnemyGuard();
+		break;
 
-	//case EEnemyType::EXPLOSION:
-	//	SpawnEnemyExplosion();
-	//	break;
-	//	
-	//case EEnemyType::MELEE:
-	//	SpawnEnemyMelee();
-	//	break;
+	case EEnemyType::EXPLOSION:
+		SpawnEnemyExplosion();
+		break;
+		
+	case EEnemyType::MELEE:
+		SpawnEnemyMelee();
+		break;
 
-	//case EEnemyType::NEAR:
+	case EEnemyType::NEAR:
 
-	//	break;
+		break;
 
- //  default:
-	//	break;
-	//	
-	//}
+   default:
+		break;
+		
+	}
 	
 	
 }

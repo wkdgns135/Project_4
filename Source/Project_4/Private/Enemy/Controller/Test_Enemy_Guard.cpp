@@ -12,6 +12,7 @@ ATest_Enemy_Guard::ATest_Enemy_Guard()
 
 void ATest_Enemy_Guard::InitializeEnemy()
 {
+   Super::InitializeEnemy();
 	maxHp = 300;
 	strength = 10;
 	speed = 200.0f;
@@ -71,6 +72,7 @@ void ATest_Enemy_Guard::GetHit(float dmg)
 
 void ATest_Enemy_Guard::Die()
 {
+	Weapon->Destroy();
 	Super::Die();
 }
 

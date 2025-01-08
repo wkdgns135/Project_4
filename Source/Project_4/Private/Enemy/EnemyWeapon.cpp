@@ -15,7 +15,7 @@ AEnemyWeapon::AEnemyWeapon()
 
 	Weapon = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Weapon"));
 	RootComponent = Weapon;
-	static ConstructorHelpers::FObjectFinder<UStaticMesh> MObject(TEXT("StaticMesh'/Game/Team_4/Enemy/Enemy_Weapon/Sword.Sword'"));
+	static ConstructorHelpers::FObjectFinder<UStaticMesh> MObject(TEXT("/Script/Engine.StaticMesh'/Game/Team_4/Enemy/Guard/Enemy_Weapon/Sword.Sword'"));
 	if (MObject.Succeeded()) {
 		Weapon->SetStaticMesh(MObject.Object);
 	}
