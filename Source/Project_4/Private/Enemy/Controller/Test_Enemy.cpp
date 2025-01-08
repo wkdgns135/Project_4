@@ -37,7 +37,9 @@ void ATest_Enemy::Tick(float DeltaTime)
 
 void ATest_Enemy::Idle() { if (fsm) fsm->SetIdleState(); }
 void ATest_Enemy::Movement(){ }
-void ATest_Enemy::Attack(){ }
+void ATest_Enemy::Attack(){ 
+	UE_LOG(LogTemp, Log, TEXT("GuardAttack in ATest_Enemy"));
+}
 void ATest_Enemy::GetHit(float dmg) { if (fsm) fsm->SetCurrentHp(currentHp -= dmg); }
 
 float ATest_Enemy::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)

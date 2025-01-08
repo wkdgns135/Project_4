@@ -60,6 +60,7 @@ void ATest_Enemy_Guard::Movement()
 void ATest_Enemy_Guard::Attack()
 {
 	Super::Attack();
+	UE_LOG(LogTemp, Log, TEXT("GuardAttack in Test_enemy_Guard"));
 	Weapon->SetAttackState();
 }
 
