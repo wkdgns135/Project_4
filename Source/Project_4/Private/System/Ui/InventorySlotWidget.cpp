@@ -46,7 +46,7 @@ void SetBackgroundAndTextColor(UImage* Background, UTextBlock* ItemNameText, con
         TextColor = FLinearColor::Black;                         // 텍스트: 검은색
         break;
     case EWeaponTier::Legend:
-        BackgroundColor = FLinearColor(1.0f, 0.84f, 0.0f, 1.0f); // 배경: 금색
+        BackgroundColor = FLinearColor(0.0f, 1.0f, 0.0f, 1.0f); // 배경: 초록색 (밝은 녹색)
         TextColor = FLinearColor::Black;                         // 텍스트: 검은색
         break;
     }
