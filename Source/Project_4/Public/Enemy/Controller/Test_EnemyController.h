@@ -11,7 +11,7 @@ enum class EEnemyType : uint8
 {
 	GUARD = 0 UMETA(DisplayName = "type_guard"),
 	EXPLOSION UMETA(DisplayName = "type_explosion"),
-	STANDOFF UMETA(DisplayName = "type_standOff"),
+	MELEE UMETA(DisplayName = "type_melee"),
 	NEAR UMETA(DisplayName = "type_near")
 };
 

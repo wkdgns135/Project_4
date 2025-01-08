@@ -16,15 +16,15 @@ const FName ATest_EnemyController::Key_TargetLocation = TEXT("TargetLocation");
 const FName ATest_EnemyController::Key_PlayerLocation = TEXT("PlayerLocation");
 
 ATest_EnemyController::ATest_EnemyController() {
-    /*
-    static ConstructorHelpers::FObjectFinder<UBehaviorTree> BTObject(TEXT("BehaviorTree'/Game/MyAI/BT_BaseEnemy_Test.BT_BaseEnemy_Test'"));
-    if (BTObject.Succeeded()) {
-        UE_LOG(LogTemp, Log, TEXT("BehaviorTree Asset Load Success!"));
-        bt_asset = BTObject.Object;
-        blackBoard = Blackboard;
+    
+    //static ConstructorHelpers::FObjectFinder<UBehaviorTree> BTObject(TEXT("BehaviorTree'/Game/Team_4/Enemy/BT_BaseEnemy_Test.BT_BaseEnemy_Test'"));
+    //if (BTObject.Succeeded()) {
+    //    UE_LOG(LogTemp, Log, TEXT("BehaviorTree Asset Load Success!"));
+    //    bt_asset = BTObject.Object;
+    //    blackBoard = Blackboard;
 
-    }
-    */
+    //}
+    
     //blackBoard = Blackboard;
 }
 
@@ -36,12 +36,11 @@ void ATest_EnemyController::BeginPlay() {
 void ATest_EnemyController::OnPossess(APawn* pawn) {
     Super::OnPossess(pawn);
     
-    //UBlackboardComponent* blackBoard = Blackboard;
-    /*
-    if (UseBlackboard(bt_asset->GetBlackboardAsset(), blackBoard)) {
-        RunBehaviorTree(bt_asset);
-    }
-    */
+    ////UBlackboardComponent* blackBoard = Blackboard;
+    //if (UseBlackboard(bt_asset->GetBlackboardAsset(), blackBoard)) {
+    //    RunBehaviorTree(bt_asset);
+    //}
+    
 
     //Blackboard->SetValueAsBool(Key_isDead, true);
 }

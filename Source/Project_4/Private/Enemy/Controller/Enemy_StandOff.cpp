@@ -21,7 +21,7 @@ void AEnemy_StandOff::BeginPlay()
 
 	if (fsm)
 	{
-		fsm->SetEnemyType(EEnemyType::STANDOFF);
+		fsm->SetEnemyType(EEnemyType::NEAR);
 		fsm->SetEnemyStatus(sightRange, speed, attackRange, maxHp);
 		if (fsm->player) Idle();
 	}

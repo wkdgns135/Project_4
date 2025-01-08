@@ -27,6 +27,10 @@ public:
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<class APawn> EnemyPawnGuard;
 
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<class APawn> EnemyPawnMelee;
+
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -40,4 +44,5 @@ private:
 	void SpawnEnemy();
 	void SpawnEnemyExplosion();
 	void SpawnEnemyGuard();
+	void SpawnEnemyMelee();
 };
