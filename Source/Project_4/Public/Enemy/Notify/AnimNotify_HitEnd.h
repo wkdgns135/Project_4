@@ -2,11 +2,11 @@
 
 #include "CoreMinimal.h"
 #include "Animation/AnimNotifies/AnimNotify.h"
-#include "AnimNotify_AttackHitCheck.generated.h"
+#include "AnimNotify_HitEnd.generated.h"
 
 
 UCLASS()
-class PROJECT_4_API UAnimNotify_AttackHitCheck : public UAnimNotify
+class PROJECT_4_API UAnimNotify_HitEnd : public UAnimNotify
 {
 	GENERATED_BODY()
 	

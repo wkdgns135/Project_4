@@ -51,10 +51,11 @@ void ATest_EnemyController::OnBlackboard(UBehaviorTree* bt)
     UseBlackboard(bt->GetBlackboardAsset(), blackBoard);
 }
 
-void ATest_EnemyController::SetState(EEnemyState eState, FString name)
+void ATest_EnemyController::SetState(EEnemyState eState)
 {
+    /*
     FString state = "";
-
+    
     switch (eState)
     {
     case EEnemyState::IDLE:
@@ -81,9 +82,9 @@ void ATest_EnemyController::SetState(EEnemyState eState, FString name)
         state = "WAIT";
         break;
     }
-
+    */
     if (blackBoard) blackBoard->SetValueAsEnum(Key_eState, (uint8)eState);
-    UE_LOG(LogTemp, Log, TEXT("%s SetState of EnemyController : %s"), *name, *state);
+    //UE_LOG(LogTemp, Log, TEXT("SetState of EnemyController : %s"), *state);
 }
 
 void ATest_EnemyController::SetType(EEnemyType eType)

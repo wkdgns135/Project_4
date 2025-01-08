@@ -11,15 +11,12 @@ UEnemy_FSM::UEnemy_FSM()
 void UEnemy_FSM::InitializeFSM(ATest_Enemy* Enemy)
 {
 	auto actor = UGameplayStatics::GetActorOfClass(GetWorld(), ATest_Player::StaticClass());
-
 	player = Cast<ATest_Player>(actor);
-
-	//enemy = Cast<ATest_Enemy>(GetOwner());
 	enemy = Enemy;
 
 	aiController = enemy->GetController<ATest_EnemyController>();
 	bEndAttackAnim = true;
-	//bEndHitAnim = true;
+	bEndHitAnim = true;
 	bInit = true;
 }
 
@@ -101,19 +98,30 @@ void UEnemy_FSM::MoveAction(float DeltaTime)
 	
 }
 
-void UEnemy_FSM::AttackAction()
+void UEnemy_FSM::EndAttackAction()
 {
-	if (player && enemy)
-	{
-		//if (bEndAttackAnim && SetTargetFocus().Size() >= attackRange) SetMoveState();
-		if(SetTargetFocus().Size() >= attackRange) SetMoveState();
-	}
+	bEndAttackAnim = true;
+	SetMoveState();
 }
 
-void UEnemy_FSM::HitAction()
+void UEnemy_FSM::StopAttackAction(float delay)
 {
-	if (CurrentHp <= 0) SetDieState();
-	else SetMoveState();
+	enemy->GetEnemyAnimInstance()->Montage_Stop(delay, enemy->GetAttackMontage());
+	aiController->SetState(eState = EEnemyState::WAIT);
+	bEndAttackAnim = true;
+}
+
+void UEnemy_FSM::EndHitAction()
+{
+	bEndHitAnim = true;
+	SetMoveState();
+}
+
+void UEnemy_FSM::StopHitAction(float delay)
+{
+	enemy->GetEnemyAnimInstance()->Montage_Stop(delay, enemy->GetHitMontage());
+	aiController->SetState(eState = EEnemyState::WAIT);
+	bEndHitAnim = true;
 }
 
 void UEnemy_FSM::DieAction()
@@ -137,46 +145,63 @@ void UEnemy_FSM::SetEnemyStatus(float sightR, float spd, float range, int32 hp)
 
 void UEnemy_FSM::SetCurrentHp(int32 hp)
 {
-	CurrentHp = hp;
+	if (hp > 0)
+	{
+		CurrentHp = hp;
+		SetHitState();
+	}
+	else
+	{
+		CurrentHp = 0;
+		SetDieState();
+	}
 }
 
 void UEnemy_FSM::SetIdleState()
 {
 	eState = EEnemyState::IDLE;
-	aiController->SetState(eState, enemy.GetName());
+	aiController->SetState(eState);
 }
 
 void UEnemy_FSM::SetMoveState()
 {
 	eState = EEnemyState::MOVE;
-	aiController->SetState(eState, enemy.GetName());
+	aiController->SetState(eState);
 }
 
 void UEnemy_FSM::SetAttackState()
 {
-	//if (!bEndHitAnim) return;
-	//SetEndAttack(false);
+	bEndAttackAnim = false;
 	eState = EEnemyState::ATTACK;
-	aiController->SetState(eState, enemy.GetName());
+	aiController->SetState(eState);
 }
 
 void UEnemy_FSM::SetHitState()
 {
-	//SetEndHit(false);
+	if (!bEndHitAnim) StopHitAction(0.0f);
+	else if (!bEndAttackAnim) StopAttackAction(0.0f);
+
+	bEndHitAnim = false;
 	eState = EEnemyState::HIT;
-	aiController->SetState(eState, enemy.GetName());
+	aiController->SetState(eState);
 }
 
 void UEnemy_FSM::SetDieState()
 {
-	eState = EEnemyState::DIE;
-	aiController->SetState(eState, enemy.GetName());
+	if (!bEndHitAnim) StopHitAction(0.3f);
+	else if (!bEndAttackAnim) StopAttackAction(0.0f);
+
+	if (eState != EEnemyState::DIE)
+	{
+		eState = EEnemyState::DIE;
+		aiController->SetState(eState);
+	}
 }
 
 void UEnemy_FSM::SetWaitState()
 {
 	eState = EEnemyState::WAIT;
-	aiController->SetState(eState, enemy.GetName());
+	aiController->SetState(eState);
 }
 
 void UEnemy_FSM::SetEndAttack(bool flag)
@@ -186,5 +211,15 @@ void UEnemy_FSM::SetEndAttack(bool flag)
 
 void UEnemy_FSM::SetEndHit(bool flag)
 {
-	//bEndHitAnim = flag;
+	bEndHitAnim = flag;
+}
+
+bool UEnemy_FSM::GetEndAttack()
+{
+	return bEndAttackAnim;
+}
+
+bool UEnemy_FSM::GetEndHit()
+{
+	return bEndHitAnim;
 }

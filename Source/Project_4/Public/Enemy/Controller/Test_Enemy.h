@@ -19,11 +19,7 @@ public:
 	virtual void InitializeEnemy();
 	virtual void Attack();
 	virtual void Die();
-	
-	void SetAttackCheck(bool flag);
-	void SetHitCheck(bool flag);
-	bool GetAttackCheck();
-	bool GetHitCheck();
+
 	void EndHit();
 	void EndAttack();
 
@@ -43,9 +39,6 @@ public:
 
 protected:
 	int32 currentHp;
-	bool bEndAttack;
-	bool bEndHit;
-	//ATest_EnemyController AIControllerClass;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = FSMComponent)
 	TObjectPtr<class UEnemy_FSM> fsm;
