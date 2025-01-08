@@ -37,7 +37,6 @@ void USaveDataManager::AddWeapon(const FWeaponSaveData data)
 	UPlayerData* NewPlayerData = NewObject<UPlayerData>();
 	NewPlayerData->WeaponSaveData = GetWeaponSaveData();
 
-	//FIX ME: 싱글톤 MaxWeaponData 메모리 접근이 안되는 문제 해결
 	if (NewPlayerData->WeaponSaveData.Num() >= MaxWeaponData) {
 		UE_LOG(LogClass, Warning, TEXT("Weapon data out of range!"));
 		return;

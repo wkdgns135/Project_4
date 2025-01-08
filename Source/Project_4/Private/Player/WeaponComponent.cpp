@@ -8,6 +8,7 @@
 #include "Player/Projectile.h"
 #include "Player/Ui/UiComponent.h"
 #include "Player/Ui/UiCameraShake.h"
+#include "System/GenericPool.h"
 #include "System/GameManager.h"
 
 // Sets default values for this component's properties
@@ -55,6 +56,10 @@ void UWeaponComponent::BeginPlay()
     AmmoLimit = AmmoCount;
     UiComponent->SetAmmoText(CurrentAmmoCount, AmmoCount);
     IsShooting = false;
+	LastFireTime = 0.0f;
+    // Object Pool 초기화
+    ProjectilePool = GetWorld()->SpawnActor<AGenericPool>();
+    ProjectilePool->InitPool<AProjectile>(10);
 }
 
 
@@ -91,12 +96,13 @@ FVector UWeaponComponent::CalculateShootDirection(const FVector& MuzzleLocation,
 
 void UWeaponComponent::SpawnProjectile(const FVector& MuzzleLocation, const FVector& ShootDirection)
 {
-    //NOTE: 오브젝트풀링을 적용할 수 있지만 간단한 프로젝트라 거기까지는 투머치라 적용안했음.
     FActorSpawnParameters SpawnParams;
-    AProjectile* Projectile = GetWorld()->SpawnActor<AProjectile>(AProjectile::StaticClass(), MuzzleLocation, ShootDirection.Rotation(), SpawnParams);
+
+    AProjectile* Projectile = ProjectilePool->GetObject<AProjectile>();
     if (Projectile)
     {
-        Projectile->ShootInDirection(ShootDirection, WeaponData->ProjectileSpeed);
+        Projectile->Activate();
+		Projectile->Initialize(MuzzleLocation, ShootDirection, WeaponData->ProjectileSpeed);
     }
 }
 
@@ -112,17 +118,25 @@ void UWeaponComponent::ApplyCameraShake() const
 void UWeaponComponent::FireWeapon()
 {
     IsShooting = true;
-    Shoot();
+
+    float CurrentTime = GetWorld()->GetTimeSeconds();
+    // 발사 간격 확인
+    if (CurrentTime - LastFireTime > 1.0f / WeaponData->FireRate)
+    {
+        Shoot();
+    }
     GetWorld()->GetTimerManager().SetTimer(
         ShootingTimerHandle, this, &UWeaponComponent::Shoot, 1.0f / WeaponData->FireRate, true
-    ); // FireRate = 초당 발사 횟수
+    ); // 연사 타이머 설정
 }
 
 void UWeaponComponent::StopFireWeapon()
 {
     IsShooting = false;
-    GetWorld()->GetTimerManager().ClearTimer(ShootingTimerHandle);
+    GetWorld()->GetTimerManager().ClearTimer(ShootingTimerHandle); // 타이머 중지
 }
+
+
 
 void UWeaponComponent::Shoot(){
     if (CurrentAmmoCount == 0 || !SkeletalMeshComponent || !UiComponent || !IsShooting) return;
@@ -147,6 +161,8 @@ void UWeaponComponent::Shoot(){
 
     CurrentAmmoCount--;
     UiComponent->SetAmmoText(CurrentAmmoCount, AmmoCount);
+
+	LastFireTime = GetWorld()->GetTimeSeconds();// 마지막 발사시간 갱신
 }
 
 void UWeaponComponent::ReloadWeapon()

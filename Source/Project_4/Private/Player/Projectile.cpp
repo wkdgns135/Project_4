@@ -16,6 +16,8 @@ AProjectile::AProjectile()
     CollisionComponent->InitSphereRadius(15.0f);
     CollisionComponent->SetCollisionProfileName(TEXT("BlockAll"));
     CollisionComponent->SetNotifyRigidBodyCollision(true); // Enable hit events
+    CollisionComponent->SetCollisionObjectType(ECC_GameTraceChannel1); // 사용자 정의 채널
+    CollisionComponent->SetCollisionResponseToChannel(ECC_Visibility, ECR_Ignore); // 레이 트레이스 채널 무시
     RootComponent = CollisionComponent;
 
     // Create and configure a projectile movement component
@@ -33,13 +35,13 @@ AProjectile::AProjectile()
     {
         ProjectileMeshComponent->SetStaticMesh(Mesh.Object);
     }
-    static ConstructorHelpers::FObjectFinder<UMaterial> Material(TEXT("'/Game/StarterContent/Materials/M_Metal_Burnished_Steel.M_Metal_Burnished_Steel'"));
+    static ConstructorHelpers::FObjectFinder<UMaterial> Material(TEXT("/Script/Engine.Material'/Game/Team_4/Sources/Material/M_Bullet.M_Bullet'"));
     if (Material.Succeeded())
     {
         UMaterialInstanceDynamic* ProjectileMaterialInstance = UMaterialInstanceDynamic::Create(Material.Object, ProjectileMeshComponent);
         ProjectileMeshComponent->SetMaterial(0, ProjectileMaterialInstance);
     }
-    ProjectileMeshComponent->SetRelativeScale3D(FVector(0.09f, 0.09f, 0.09f));
+    ProjectileMeshComponent->SetRelativeScale3D(FVector(0.05f, 0.05f, 0.05f));
     ProjectileMeshComponent->SetupAttachment(RootComponent);
 
     
@@ -51,15 +53,13 @@ AProjectile::AProjectile()
 
     // Bind the OnHit function to the collision component's hit event
     CollisionComponent->OnComponentHit.AddDynamic(this, &AProjectile::OnHit);
-
-    // Set the initial lifespan of the projectile
-    InitialLifeSpan = 5.0f;
 }
 
 // Called when the game starts or when spawned
 void AProjectile::BeginPlay()
 {
     Super::BeginPlay();
+	ProjectileMovementComponent->SetActive(false);
 }
 
 // Called every frame
@@ -70,8 +70,6 @@ void AProjectile::Tick(float DeltaTime)
 
 void AProjectile::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit)
 {
-    UE_LOG(LogTemp, Display, TEXT("On hit bullet"));
-
     if (OtherActor != this && OtherComponent->IsSimulatingPhysics())
     {
         OtherComponent->AddImpulseAtLocation(ProjectileMovementComponent->Velocity * 100.0f, Hit.ImpactPoint);
@@ -83,13 +81,30 @@ void AProjectile::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, U
         UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ImpactEffect, Hit.ImpactPoint, Hit.ImpactNormal.Rotation());
     }
 
-    // Destroy the projectile
-    Destroy();
+    Deactivate();
 }
 
-void AProjectile::ShootInDirection(const FVector& ShootDirection, const uint32 Speed)
+void AProjectile::Activate()
 {
+	Super::Activate();
+
+    GetWorld()->GetTimerManager().SetTimer(
+        LifeTimerHandle, this, &AProjectile::Deactivate, 5.0f, false
+    ); // 발사 후 5초가 지나면 Deactivate
+}
+
+void AProjectile::Deactivate()
+{
+	Super::Deactivate();
+    GetWorld()->GetTimerManager().ClearTimer(LifeTimerHandle);
+	ProjectileMovementComponent->SetActive(false);
+}
+
+void AProjectile::Initialize(const FVector& Location, const FVector& ShootDirection, const uint32 Speed)
+{
+    SetActorLocation(Location);
     ProjectileMovementComponent->InitialSpeed = Speed;
     ProjectileMovementComponent->MaxSpeed = Speed;
-	ProjectileMovementComponent->Velocity = ShootDirection * ProjectileMovementComponent->InitialSpeed;
+    ProjectileMovementComponent->Velocity = ShootDirection * ProjectileMovementComponent->InitialSpeed;
+    ProjectileMovementComponent->SetActive(true);
 }

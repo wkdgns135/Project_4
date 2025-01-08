@@ -7,6 +7,7 @@
 #include "Player/WeaponData.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Player/Ui/UiComponent.h"
+#include "../System/GenericPool.h"
 #include "WeaponComponent.generated.h"
 
 
@@ -42,6 +43,9 @@ private:
     int32 AmmoCount;
     int32 AmmoLimit;
     bool IsShooting;
+    float LastFireTime;
+
+    AGenericPool *ProjectilePool;
 
 public:
     virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;

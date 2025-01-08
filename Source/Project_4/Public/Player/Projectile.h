@@ -3,10 +3,11 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "System/PoolableActor.h"
 #include "Projectile.generated.h"
 
 UCLASS()
-class PROJECT_4_API AProjectile : public AActor
+class PROJECT_4_API AProjectile : public APoolableActor
 {
     GENERATED_BODY()
 
@@ -22,17 +23,19 @@ public:
     // Called every frame
     virtual void Tick(float DeltaTime) override;
 
-
+public:
     UFUNCTION()
     void OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit);
-
-	void ShootInDirection(const FVector& ShootDirection, const uint32 Speed);
-
+	void Activate() override;
+	void Deactivate() override;
+	void Initialize(const FVector& Location, const FVector& ShootDirection, const uint32 Speed);
+    
 private:
     class USphereComponent* CollisionComponent;
     class UProjectileMovementComponent* ProjectileMovementComponent;
     class UStaticMeshComponent* ProjectileMeshComponent;
     class UParticleSystem* ImpactEffect;
 
+    FTimerHandle LifeTimerHandle;
 };
 
