@@ -6,12 +6,15 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "InputMappingContext.h"
 #include "Components/CapsuleComponent.h"
+#include "TimerManager.h"
 
 // Sets default values
 APlayerCharacter::APlayerCharacter()
 {
 	walkSpeed = 450.0f;
 	sprintSpeed = 600.0f;
+	isFire = false;
+	isReload = false;
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
@@ -20,14 +23,14 @@ APlayerCharacter::APlayerCharacter()
 	CHCameraComponent->SetRelativeLocation(FVector(0.0f, 0.0f, 20.0f + BaseEyeHeight));
 	CHCameraComponent->bUsePawnControlRotation = true;
 
-	static ConstructorHelpers::FObjectFinder<UInputMappingContext>DEFAULT_CONTEXT(TEXT("/Script/EnhancedInput.InputMappingContext'/Game/Team_4/BluePrints/Player/InpuAction/IMC_Player.IMC_Player'"));
+	static ConstructorHelpers::FObjectFinder<UInputMappingContext>DEFAULT_CONTEXT(TEXT("/Script/EnhancedInput.InputMappingContext'/Game/Team_4/BluePrints/Player/InputAction/IMC_Player.IMC_Player'"));
 
-	static ConstructorHelpers::FObjectFinder<UInputAction>IA_MOVE(TEXT("/Script/EnhancedInput.InputAction'/Game/Team_4/BluePrints/Player/InpuAction/IA_Move.IA_Move'"));
-	static ConstructorHelpers::FObjectFinder<UInputAction>IA_JUMP(TEXT("/Script/EnhancedInput.InputAction'/Game/Team_4/BluePrints/Player/InpuAction/IA_Jump.IA_Jump'"));
-	static ConstructorHelpers::FObjectFinder<UInputAction>IA_LOOK(TEXT("/Script/EnhancedInput.InputAction'/Game/Team_4/BluePrints/Player/InpuAction/IA_Look.IA_Look'"));
-	static ConstructorHelpers::FObjectFinder<UInputAction>IA_SPRINT(TEXT("/Script/EnhancedInput.InputAction'/Game/Team_4/BluePrints/Player/InpuAction/IA_Sprint.IA_Sprint'"));
-	static ConstructorHelpers::FObjectFinder<UInputAction>IA_FIRE(TEXT("/Script/EnhancedInput.InputAction'/Game/Team_4/BluePrints/Player/InpuAction/IA_Fire.IA_Fire'"));
-	static ConstructorHelpers::FObjectFinder<UInputAction>IA_RELOAD(TEXT("/Script/EnhancedInput.InputAction'/Game/Team_4/BluePrints/Player/InpuAction/IA_Reload.IA_Reload'"));
+	static ConstructorHelpers::FObjectFinder<UInputAction>IA_MOVE(TEXT("/Script/EnhancedInput.InputAction'/Game/Team_4/BluePrints/Player/InputAction/IA_Move.IA_Move'"));
+	static ConstructorHelpers::FObjectFinder<UInputAction>IA_JUMP(TEXT("/Script/EnhancedInput.InputAction'/Game/Team_4/BluePrints/Player/InputAction/IA_Jump.IA_Jump'"));
+	static ConstructorHelpers::FObjectFinder<UInputAction>IA_LOOK(TEXT("/Script/EnhancedInput.InputAction'/Game/Team_4/BluePrints/Player/InputAction/IA_Look.IA_Look'"));
+	static ConstructorHelpers::FObjectFinder<UInputAction>IA_SPRINT(TEXT("/Script/EnhancedInput.InputAction'/Game/Team_4/BluePrints/Player/InputAction/IA_Sprint.IA_Sprint'"));
+	static ConstructorHelpers::FObjectFinder<UInputAction>IA_FIRE(TEXT("/Script/EnhancedInput.InputAction'/Game/Team_4/BluePrints/Player/InputAction/IA_Fire.IA_Fire'"));
+	static ConstructorHelpers::FObjectFinder<UInputAction>IA_RELOAD(TEXT("/Script/EnhancedInput.InputAction'/Game/Team_4/BluePrints/Player/InputAction/IA_Reload.IA_Reload'"));
 
 	if (DEFAULT_CONTEXT.Succeeded())
 	{
@@ -117,22 +120,24 @@ void APlayerCharacter::Fire()
 {
 	if (!WeaponComponent)return;
 	WeaponComponent->FireWeapon();
-	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
-	AnimInstance->Montage_Play(FireMontage);
+	isFire = true;
 }
 
 void APlayerCharacter::StopFire()
 {
 	if (!WeaponComponent)return;
 	WeaponComponent->StopFireWeapon();
+	isFire = false;
 }
 
 void APlayerCharacter::Reload()
 {
 	if (!WeaponComponent)return;
 	WeaponComponent->ReloadWeapon();
-	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
-	AnimInstance->Montage_Play(ReloadMontage);
+	if (!isReload) {
+		isReload = true;
+		GetWorld()->GetTimerManager().SetTimer(TimerHandel, this, &APlayerCharacter::ResetReload, 1.0f, false);
+	}
 }
 
 void APlayerCharacter::Move(const FInputActionValue& Value)
@@ -166,6 +171,9 @@ void APlayerCharacter::Sprint() {
 }
 void APlayerCharacter::StopSprint() {
 	GetCharacterMovement()->MaxWalkSpeed = walkSpeed;
+}
+void APlayerCharacter::ResetReload() {
+	isReload = false;
 }
 
 

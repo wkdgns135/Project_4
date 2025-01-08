@@ -45,11 +45,18 @@ private:
 	UPROPERTY(editanywhere, category = input, meta = (allowprivateaccess = true))
 	float sprintSpeed;
 
+	FTimerHandle TimerHandel;
+
 	UWeaponComponent *WeaponComponent;
 
 public:
 	// Sets default values for this character's properties
 	APlayerCharacter();
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Animation")
+	bool isFire;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Animation")
+	bool isReload;
 
 protected:
 	// Called when the game starts or when spawned
@@ -70,8 +77,9 @@ public:
 	void Fire();
 	void StopFire();
 	void Reload();
-
+	void ResetReload();
 
 	UPROPERTY(VisibleAnywhere)
 	UCameraComponent* CHCameraComponent;
+
 };
