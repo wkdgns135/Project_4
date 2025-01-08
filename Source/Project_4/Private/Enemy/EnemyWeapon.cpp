@@ -38,15 +38,12 @@ void AEnemyWeapon::BeginPlay()
 void AEnemyWeapon::SetAttackState()
 {
 	Weapon->SetGenerateOverlapEvents(true);
-	UE_LOG(LogCore, Log, TEXT("Sword Attack!!"));
-	FTimerHandle TimerHandle;
-	GetWorld()->GetTimerManager().SetTimer(TimerHandle, this, &AEnemyWeapon::EndAttackState, 0.4f);
+
 }
 
 void AEnemyWeapon::EndAttackState()
 {
 	Weapon->SetGenerateOverlapEvents(false);
-	UE_LOG(LogCollision, Log, TEXT("Sword Attack End!!"));
 }
 
 void AEnemyWeapon::SetWeaponOwner(ACharacter* Character)
@@ -57,12 +54,10 @@ void AEnemyWeapon::SetWeaponOwner(ACharacter* Character)
 
 void AEnemyWeapon::OnWeaponOverlap(UPrimitiveComponent* OverlapedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& Result)
 {
-	UE_LOG(LogCore, Log, TEXT("Attack Collison!!"));
 	//bool b3 = OtherActor->GetClass()->IsChildOf(ATest_Player::StaticClass());
 
 	if (OtherActor->IsA(ATest_Player::StaticClass()))
 	{
-		UE_LOG(LogCore, Log, TEXT("Attack Player Collison!!"));
 		EndAttackState();
 		FDamageEvent DamageEvent;
 		OtherActor->TakeDamage(Owner->GetStrength(), DamageEvent, Owner->GetController(), Owner);

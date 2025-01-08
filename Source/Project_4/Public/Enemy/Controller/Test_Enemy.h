@@ -21,7 +21,7 @@ public:
 	virtual void Die();
 
 	void EndHit();
-	void EndAttack();
+	virtual void EndAttack();
 
 	UEnemyAnimInstance* GetEnemyAnimInstance();
 	UAnimMontage* GetAttackMontage();

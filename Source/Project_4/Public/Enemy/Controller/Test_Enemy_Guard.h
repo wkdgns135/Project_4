@@ -21,6 +21,7 @@ public:
 	void GetHit(float dmg) override;
 	void Die() override;
 	void DropItem() override;
+   virtual void EndAttack() override;
 
 private:
 	virtual void BeginPlay() override;

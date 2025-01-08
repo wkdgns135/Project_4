@@ -61,7 +61,6 @@ void ATest_Enemy_Guard::Movement()
 void ATest_Enemy_Guard::Attack()
 {
 	Super::Attack();
-	UE_LOG(LogTemp, Log, TEXT("GuardAttack in Test_enemy_Guard"));
 	Weapon->SetAttackState();
 }
 
@@ -79,6 +78,12 @@ void ATest_Enemy_Guard::Die()
 void ATest_Enemy_Guard::DropItem()
 {
 	Super::DropItem();
+}
+
+void ATest_Enemy_Guard::EndAttack()
+{
+   Super::EndAttack();
+   Weapon->EndAttackState();
 }
 
 
