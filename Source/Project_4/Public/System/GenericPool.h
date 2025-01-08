@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "PoolableActor.h"
 #include "GenericPool.generated.h"
 
 UCLASS()
@@ -18,22 +19,18 @@ protected:
 
 private:
     UPROPERTY(EditAnywhere, Category = "Pool")
-    int32 PoolSize;
-    TArray<AActor*> ObjectPool;
+    TArray<APoolableActor*> ObjectPool;
 
 public:
     template <typename T>
     void InitPool(const int32 Size)
     {
-        PoolSize = Size;
         UClass* ObjectClass = T::StaticClass();
         for (int32 i = 0; i < Size; ++i) {
             FActorSpawnParameters SpawnParams;
             SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-            AActor* NewActor = GetWorld()->SpawnActor<AActor>(ObjectClass, FVector::ZeroVector, FRotator::ZeroRotator, SpawnParams);
-			NewActor->SetActorEnableCollision(false);
-            NewActor->SetActorHiddenInGame(true);
-
+            APoolableActor* NewActor = GetWorld()->SpawnActor<APoolableActor>(ObjectClass, FVector::ZeroVector, FRotator::ZeroRotator, SpawnParams);
+			NewActor->Deactivate();
             ObjectPool.Add(NewActor);
         }
     }
@@ -41,12 +38,11 @@ public:
     template <typename T>
     T* GetObject() {
         UClass* ObjectClass = T::StaticClass();
-        for (AActor* Object : ObjectPool)
+        for (APoolableActor* Object : ObjectPool)
         {
-            if (!Object->GetActorEnableCollision())
+            if (!Object->GetIsActive())
             {
-                Object->SetActorEnableCollision(true);
-                Object->SetActorHiddenInGame(false);
+				Object->Activate();
                 return Cast<T>(Object);
             }
         }
@@ -59,8 +55,6 @@ public:
 
     template <typename T>
     void ReturnObject(T* Object) {
-        Object->SetActorEnableCollision(false);
-        Object->SetActorHiddenInGame(true);
         Object->Deactivate();
     }
 };

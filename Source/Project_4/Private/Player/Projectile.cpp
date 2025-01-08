@@ -70,8 +70,6 @@ void AProjectile::Tick(float DeltaTime)
 
 void AProjectile::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit)
 {
-    UE_LOG(LogTemp, Display, TEXT("On hit bullet"));
-
     if (OtherActor != this && OtherComponent->IsSimulatingPhysics())
     {
         OtherComponent->AddImpulseAtLocation(ProjectileMovementComponent->Velocity * 100.0f, Hit.ImpactPoint);
@@ -86,23 +84,27 @@ void AProjectile::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, U
     Deactivate();
 }
 
-void AProjectile::Activate(const FVector& Location, const FVector& ShootDirection, const uint32 Speed)
+void AProjectile::Activate()
 {
-	SetActorLocation(Location);
-    ProjectileMovementComponent->InitialSpeed = Speed;
-    ProjectileMovementComponent->MaxSpeed = Speed;
-    ProjectileMovementComponent->Velocity = ShootDirection * ProjectileMovementComponent->InitialSpeed;
-	ProjectileMovementComponent->SetActive(true);
+	Super::Activate();
+
+    GetWorld()->GetTimerManager().SetTimer(
+        LifeTimerHandle, this, &AProjectile::Deactivate, 5.0f, false
+    ); // 발사 후 5초가 지나면 Deactivate
 }
 
 void AProjectile::Deactivate()
 {
-    // 액터를 감춤 
-    SetActorHiddenInGame(true);
-    // 충돌 계산 비활성화
-    SetActorEnableCollision(false);
-    // 틱(업데이트 함수) 중지 
-    SetActorTickEnabled(false);
-
+	Super::Deactivate();
+    GetWorld()->GetTimerManager().ClearTimer(LifeTimerHandle);
 	ProjectileMovementComponent->SetActive(false);
+}
+
+void AProjectile::Initialize(const FVector& Location, const FVector& ShootDirection, const uint32 Speed)
+{
+    SetActorLocation(Location);
+    ProjectileMovementComponent->InitialSpeed = Speed;
+    ProjectileMovementComponent->MaxSpeed = Speed;
+    ProjectileMovementComponent->Velocity = ShootDirection * ProjectileMovementComponent->InitialSpeed;
+    ProjectileMovementComponent->SetActive(true);
 }

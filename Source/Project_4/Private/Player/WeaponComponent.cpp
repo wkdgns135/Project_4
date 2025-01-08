@@ -101,7 +101,8 @@ void UWeaponComponent::SpawnProjectile(const FVector& MuzzleLocation, const FVec
     AProjectile* Projectile = ProjectilePool->GetObject<AProjectile>();
     if (Projectile)
     {
-        Projectile->Activate(MuzzleLocation, ShootDirection, WeaponData->ProjectileSpeed);
+        Projectile->Activate();
+		Projectile->Initialize(MuzzleLocation, ShootDirection, WeaponData->ProjectileSpeed);
     }
 }
 
