@@ -56,7 +56,7 @@ void AEnemyWeapon::OnWeaponOverlap(UPrimitiveComponent* OverlapedComponent, AAct
 {
 	//bool b3 = OtherActor->GetClass()->IsChildOf(ATest_Player::StaticClass());
 
-	if (OtherActor->IsA(ATest_Player::StaticClass()))
+	if (OtherActor->IsA(APlayerCharacter::StaticClass()))
 	{
 		EndAttackState();
 		FDamageEvent DamageEvent;

@@ -31,13 +31,14 @@ private:
     void GetScreenCenterWorldLocationAndDirection(FVector& OutWorldLocation, FVector& OutWorldDirection) const;
     void SpawnProjectile(const FVector& MuzzleLocation, const FVector& ShootDirection);
     void ApplyCameraShake() const;
-    void Shoot();
+    void Shoot(bool &IsFire);
 
     USkeletalMeshComponent* SkeletalMeshComponent;
     UUiComponent* UiComponent;
     UPROPERTY(EditAnywhere, Category = "Weapon")
     UWeaponData* WeaponData;
     FTimerHandle ShootingTimerHandle;
+    FTimerHandle FireAnimTimerHandle;
 
     int32 CurrentAmmoCount;
     int32 AmmoCount;
@@ -51,13 +52,19 @@ public:
     virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
     UFUNCTION(BlueprintCallable, Category = "Weapon")
-    void FireWeapon();
+    void FireWeapon(bool &IsFire, bool &IsReload);
 
     UFUNCTION(BlueprintCallable, Category = "Weapon")
-    void StopFireWeapon();
+    void StopFireWeapon(bool &IsFire);
 
     UFUNCTION(BlueprintCallable, Category = "Weapon")
     void ReloadWeapon();
 
     void IncreaseAmmo(const uint32 Ammo);
+
+    bool GetIsShootable() const;
+    bool GetIsReloadable() const;
+
+    float GetFireRate() const { return WeaponData->FireRate; };
+    float GetReload() const { return WeaponData->Reload; };
 };

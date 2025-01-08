@@ -28,7 +28,7 @@ public:
     void OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit);
 	void Activate() override;
 	void Deactivate() override;
-	void Initialize(const FVector& Location, const FVector& ShootDirection, const uint32 Speed);
+	void Initialize(const FVector& Location, const FVector& ShootDirection, const uint32 Speed, const uint32 Damage);
     
 private:
     class USphereComponent* CollisionComponent;
@@ -37,5 +37,6 @@ private:
     class UParticleSystem* ImpactEffect;
 
     FTimerHandle LifeTimerHandle;
+    uint32 Damage;
 };
 

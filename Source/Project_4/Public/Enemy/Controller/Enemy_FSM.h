@@ -24,7 +24,7 @@ public:
 	EEnemyType eType = EEnemyType::GUARD;
 
 	UPROPERTY(visibleAnywhere, Category = "FSM")
-	TObjectPtr<class ATest_Player> player;
+	TObjectPtr<class ACharacter> player;
 
 	UPROPERTY(visibleAnywhere, Category = "FSM")
 	TObjectPtr<class ATest_Enemy> enemy;

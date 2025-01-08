@@ -1,6 +1,7 @@
 
 #include "Enemy/Controller/Enemy_FSM.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "PlayerCharacter.h"
 
 UEnemy_FSM::UEnemy_FSM()
 {
@@ -10,8 +11,8 @@ UEnemy_FSM::UEnemy_FSM()
 
 void UEnemy_FSM::InitializeFSM(ATest_Enemy* Enemy)
 {
-	auto actor = UGameplayStatics::GetActorOfClass(GetWorld(), ATest_Player::StaticClass());
-	player = Cast<ATest_Player>(actor);
+	auto actor = UGameplayStatics::GetActorOfClass(GetWorld(), APlayerCharacter::StaticClass());
+	player = Cast<ACharacter>(actor);
 	enemy = Enemy;
 
 	aiController = enemy->GetController<ATest_EnemyController>();

@@ -5,6 +5,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Particles/ParticleSystem.h"
 #include "UObject/ConstructorHelpers.h"
+#include "Enemy/Controller/Test_Enemy.h"
 
 // Sets default values
 AProjectile::AProjectile()
@@ -16,7 +17,7 @@ AProjectile::AProjectile()
     CollisionComponent->InitSphereRadius(15.0f);
     CollisionComponent->SetCollisionProfileName(TEXT("BlockAll"));
     CollisionComponent->SetNotifyRigidBodyCollision(true); // Enable hit events
-    CollisionComponent->SetCollisionObjectType(ECC_GameTraceChannel1); // 사용자 정의 채널
+    CollisionComponent->SetCollisionObjectType(ECC_GameTraceChannel4); // 사용자 정의 채널
     CollisionComponent->SetCollisionResponseToChannel(ECC_Visibility, ECR_Ignore); // 레이 트레이스 채널 무시
     RootComponent = CollisionComponent;
 
@@ -81,6 +82,10 @@ void AProjectile::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, U
         UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ImpactEffect, Hit.ImpactPoint, Hit.ImpactNormal.Rotation());
     }
 
+    if (OtherActor->IsA(ATest_Enemy::StaticClass())) {
+        FDamageEvent DamageEvent;
+        OtherActor->TakeDamage(Damage, DamageEvent, nullptr, this);
+    }
     Deactivate();
 }
 
@@ -100,8 +105,9 @@ void AProjectile::Deactivate()
 	ProjectileMovementComponent->SetActive(false);
 }
 
-void AProjectile::Initialize(const FVector& Location, const FVector& ShootDirection, const uint32 Speed)
+void AProjectile::Initialize(const FVector& Location, const FVector& ShootDirection, const uint32 Speed, const uint32 Dmg)
 {
+    Damage = Dmg;
     SetActorLocation(Location);
     ProjectileMovementComponent->InitialSpeed = Speed;
     ProjectileMovementComponent->MaxSpeed = Speed;

@@ -5,6 +5,7 @@
 #include "NavigationSystem.h"
 #include "Enemy/Controller/Test_EnemyController.h"
 #include "Enemy/Controller/Test_Player.h"
+#include "PlayerCharacter.h"
 #include <Kismet/GameplayStatics.h>
 
 
@@ -15,7 +16,7 @@ EBTNodeResult::Type UBT_Move_Task::ExecuteTask(UBehaviorTreeComponent& OwnerComp
 
 	if (Enemy)
 	{
-		auto player = UGameplayStatics::GetActorOfClass(GetWorld(), ATest_Player::StaticClass());
+		auto player = UGameplayStatics::GetActorOfClass(GetWorld(), APlayerCharacter::StaticClass());
 
 		FVector enemyLocation = Enemy->GetActorLocation();
 		FVector playerLocation = player->GetActorLocation();

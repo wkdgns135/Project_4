@@ -118,25 +118,23 @@ void APlayerCharacter::Jump() {
 
 void APlayerCharacter::Fire()
 {
-	if (!WeaponComponent)return;
-	WeaponComponent->FireWeapon();
-	isFire = true;
+	//HERE: 캐릭터 발사 함수
+	if (!WeaponComponent || !WeaponComponent->GetIsShootable())return;
+	WeaponComponent->FireWeapon(isFire, isReload);
 }
 
 void APlayerCharacter::StopFire()
 {
 	if (!WeaponComponent)return;
-	WeaponComponent->StopFireWeapon();
-	isFire = false;
+	WeaponComponent->StopFireWeapon(isFire);
 }
 
 void APlayerCharacter::Reload()
 {
 	if (!WeaponComponent)return;
-	WeaponComponent->ReloadWeapon();
-	if (!isReload) {
+	if (!isReload && WeaponComponent->GetIsReloadable()) {
 		isReload = true;
-		GetWorld()->GetTimerManager().SetTimer(TimerHandel, this, &APlayerCharacter::ResetReload, 1.0f, false);
+		GetWorld()->GetTimerManager().SetTimer(TimerHandel, this, &APlayerCharacter::ResetReload, WeaponComponent->GetReload(), false);
 	}
 }
 
@@ -173,6 +171,7 @@ void APlayerCharacter::StopSprint() {
 	GetCharacterMovement()->MaxWalkSpeed = walkSpeed;
 }
 void APlayerCharacter::ResetReload() {
+	WeaponComponent->ReloadWeapon();
 	isReload = false;
 }
 

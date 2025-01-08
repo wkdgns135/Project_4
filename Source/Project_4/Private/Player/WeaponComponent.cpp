@@ -102,7 +102,7 @@ void UWeaponComponent::SpawnProjectile(const FVector& MuzzleLocation, const FVec
     if (Projectile)
     {
         Projectile->Activate();
-		Projectile->Initialize(MuzzleLocation, ShootDirection, WeaponData->ProjectileSpeed);
+		Projectile->Initialize(MuzzleLocation, ShootDirection, WeaponData->ProjectileSpeed, WeaponData->Damage);
     }
 }
 
@@ -115,22 +115,21 @@ void UWeaponComponent::ApplyCameraShake() const
     }
 }
 
-void UWeaponComponent::FireWeapon()
+void UWeaponComponent::FireWeapon(bool &IsFire, bool &IsReload)
 {
+    // HERE: 웨폰 컴포넌트 발사 함수
+    if (!GetIsShootable() || IsReload)return;
     IsShooting = true;
+    Shoot(IsFire);
 
-    float CurrentTime = GetWorld()->GetTimeSeconds();
-    // 발사 간격 확인
-    if (CurrentTime - LastFireTime > 1.0f / WeaponData->FireRate)
-    {
-        Shoot();
-    }
-    GetWorld()->GetTimerManager().SetTimer(
-        ShootingTimerHandle, this, &UWeaponComponent::Shoot, 1.0f / WeaponData->FireRate, true
-    ); // 연사 타이머 설정
+    GetWorld()->GetTimerManager().SetTimer(ShootingTimerHandle, FTimerDelegate::CreateLambda([&]
+        {
+            Shoot(IsFire);
+        }
+    ), 1.0f / WeaponData->FireRate, true);
 }
 
-void UWeaponComponent::StopFireWeapon()
+void UWeaponComponent::StopFireWeapon(bool &IsFire)
 {
     IsShooting = false;
     GetWorld()->GetTimerManager().ClearTimer(ShootingTimerHandle); // 타이머 중지
@@ -138,8 +137,9 @@ void UWeaponComponent::StopFireWeapon()
 
 
 
-void UWeaponComponent::Shoot(){
+void UWeaponComponent::Shoot(bool &IsFire){
     if (CurrentAmmoCount == 0 || !SkeletalMeshComponent || !UiComponent || !IsShooting) return;
+    
     FVector WorldLocation;
     FVector WorldDirection;
     GetScreenCenterWorldLocationAndDirection(WorldLocation, WorldDirection);
@@ -163,6 +163,15 @@ void UWeaponComponent::Shoot(){
     UiComponent->SetAmmoText(CurrentAmmoCount, AmmoCount);
 
 	LastFireTime = GetWorld()->GetTimeSeconds();// 마지막 발사시간 갱신
+
+
+    //애니메이션 Fire Rate 시간 만큼 재생하고 중단시키기
+    IsFire = true;
+    GetWorld()->GetTimerManager().SetTimer(FireAnimTimerHandle, FTimerDelegate::CreateLambda([&]()
+        {
+            IsFire = false;
+            GetWorld()->GetTimerManager().ClearTimer(FireAnimTimerHandle);
+        }), 0.9f / GetFireRate(), false);
 }
 
 void UWeaponComponent::ReloadWeapon()
@@ -185,4 +194,15 @@ void UWeaponComponent::IncreaseAmmo(const uint32 Ammo)
 {
     AmmoCount = FMath::Clamp(AmmoCount + Ammo, 0, AmmoLimit);
     UiComponent->SetAmmoText(CurrentAmmoCount, AmmoCount);
+}
+
+bool UWeaponComponent::GetIsShootable() const 
+{
+    float CurrentTime = GetWorld()->GetTimeSeconds();
+    return (CurrentTime - LastFireTime > 1.0f / WeaponData->FireRate) && (CurrentAmmoCount > 0);
+}
+
+bool UWeaponComponent::GetIsReloadable() const
+{
+    return !IsShooting && AmmoCount != 0 && WeaponData->AmmoCount != CurrentAmmoCount;
 }
