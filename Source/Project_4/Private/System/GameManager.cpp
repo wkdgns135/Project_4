@@ -15,7 +15,7 @@ void UGameManager::LoadMainScene(const EWeaponTier& WeaponTier, const EWeaponTyp
 
 	const UWorld* World = GetWorld();
 	check(World);
-	UGameplayStatics::OpenLevel(World, "PlayerShootingTestLevel");
+	UGameplayStatics::OpenLevel(World, "MainStageLevel");
 
 	// 컨트롤러 가져오기
 	APlayerController* PlayerController = UGameplayStatics::GetPlayerController(World, 0);
