@@ -24,7 +24,7 @@ void AItemDropHandle::Tick(float DeltaTime)
 
 void AItemDropHandle::SpawnWeapon(int32 WeaponTier, int32 DropTier, FVector EnemyLocation)
 {
-	//if (DropOrFalse(DropTier))
+	if (DropOrFalse(DropTier))
 	{
 		EWeaponTier DropItemTier = GetItemTier(WeaponTier);
 		EWeaponType DropItemType = GetItemType();
