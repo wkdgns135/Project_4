@@ -5,6 +5,7 @@
 #include "Engine/DamageEvents.h"
 #include "Enemy/Controller/Test_EnemyController.h"
 #include "Enemy/Anim/EnemyAnimInstance.h"
+#include "Item/ItemDropHandle.h"
 #include "Components/CapsuleComponent.h"
 #include "Test_Enemy.generated.h"
 
@@ -39,6 +40,9 @@ public:
 
 protected:
 	int32 currentHp;
+
+	UPROPERTY()
+	TObjectPtr<class AItemDropHandle> DropHandle;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = FSMComponent)
 	TObjectPtr<class UEnemy_FSM> fsm;
