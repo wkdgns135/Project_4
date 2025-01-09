@@ -2,6 +2,7 @@
 #include "System/GameManager.h"
 #include "Kismet/GameplayStatics.h"
 #include <Blueprint/WidgetBlueprintLibrary.h>
+#include <System/SaveDataManager.h>
 
 void UGameManager::InitWeaponData(const EWeaponTier& WeaponTier, const EWeaponType& WeaponType)
 {
@@ -9,7 +10,7 @@ void UGameManager::InitWeaponData(const EWeaponTier& WeaponTier, const EWeaponTy
 	this->CurrentWeaponType = WeaponType;
 }
 
-void UGameManager::LoadMainScene(const EWeaponTier& WeaponTier, const EWeaponType& WeaponType, const uint32 Level)
+void UGameManager::LoadMainStageScene(const EWeaponTier& WeaponTier, const EWeaponType& WeaponType, const uint32 Level)
 {
 	InitWeaponData(WeaponTier, WeaponType);
 
@@ -24,6 +25,28 @@ void UGameManager::LoadMainScene(const EWeaponTier& WeaponTier, const EWeaponTyp
 		// 입력 모드 설정
 		PlayerController->SetInputMode(FInputModeGameOnly());
 		PlayerController->bShowMouseCursor = false;
+	}
+}
+
+void UGameManager::LoadMainMenuScene()
+{
+	//TODO: 여기에 코드 작성 (설명)
+
+	if (CurrentWeaponTier != EWeaponTier::Default) {
+		GetGameInstance()->GetSubsystem<USaveDataManager>()->AddWeapon({CurrentWeaponType, CurrentWeaponTier});
+	}
+
+	const UWorld* World = GetWorld();
+	check(World);
+	UGameplayStatics::OpenLevel(World, "MainMenuLevel");
+
+	// 컨트롤러 가져오기
+	APlayerController* PlayerController = UGameplayStatics::GetPlayerController(World, 0);
+	if (PlayerController)
+	{
+		// 입력 모드 설정
+		PlayerController->SetInputMode(FInputModeUIOnly());
+		PlayerController->bShowMouseCursor = true;
 	}
 }
 

@@ -71,6 +71,6 @@ void UInventorySlotWidget::InitSlot(const EWeaponType& type, const EWeaponTier& 
 
 void UInventorySlotWidget::ButtonClicked()
 {
-	GetGameInstance()->GetSubsystem<UGameManager>()->LoadMainScene(Tier, Type, 1);
+	GetGameInstance()->GetSubsystem<UGameManager>()->LoadMainStageScene(Tier, Type, 1);
 }
 

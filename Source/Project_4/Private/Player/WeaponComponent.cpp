@@ -177,6 +177,7 @@ void UWeaponComponent::Shoot(bool &IsFire){
 void UWeaponComponent::ReloadWeapon()
 {
     if (IsShooting || AmmoCount == 0)return;
+    UGameplayStatics::SpawnSoundAttached(ReloadSound, SkeletalMeshComponent, TEXT("Muzzle"));
 
     if (AmmoCount > WeaponData->AmmoCount - CurrentAmmoCount) {
         AmmoCount -= WeaponData->AmmoCount - CurrentAmmoCount;

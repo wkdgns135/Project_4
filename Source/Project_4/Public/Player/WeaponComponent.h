@@ -39,6 +39,8 @@ private:
     UWeaponData* WeaponData;
     UPROPERTY(EditAnywhere, Category = "Weapon")
     USoundBase* FireSound;
+    UPROPERTY(EditAnywhere, Category = "Weapon")
+    USoundBase* ReloadSound;
 
     FTimerHandle ShootingTimerHandle;
     FTimerHandle FireAnimTimerHandle;

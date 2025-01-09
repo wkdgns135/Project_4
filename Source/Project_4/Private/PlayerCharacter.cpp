@@ -134,6 +134,7 @@ void APlayerCharacter::Reload()
 	if (!WeaponComponent)return;
 	if (!isReload && WeaponComponent->GetIsReloadable()) {
 		isReload = true;
+		WeaponComponent->ReloadWeapon();
 		GetWorld()->GetTimerManager().SetTimer(TimerHandel, this, &APlayerCharacter::ResetReload, WeaponComponent->GetReload(), false);
 	}
 }
@@ -171,7 +172,6 @@ void APlayerCharacter::StopSprint() {
 	GetCharacterMovement()->MaxWalkSpeed = walkSpeed;
 }
 void APlayerCharacter::ResetReload() {
-	WeaponComponent->ReloadWeapon();
 	isReload = false;
 }
 
