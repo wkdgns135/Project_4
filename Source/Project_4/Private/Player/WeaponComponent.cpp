@@ -137,7 +137,9 @@ void UWeaponComponent::StopFireWeapon(bool &IsFire)
 
 void UWeaponComponent::Shoot(bool &IsFire){
     if (CurrentAmmoCount == 0 || !SkeletalMeshComponent || !UiComponent || !IsShooting) return;
+    UGameplayStatics::SpawnSoundAttached(FireSound, SkeletalMeshComponent, TEXT("Muzzle"));
     
+
     FVector WorldLocation;
     FVector WorldDirection;
     GetScreenCenterWorldLocationAndDirection(WorldLocation, WorldDirection);

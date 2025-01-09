@@ -37,6 +37,9 @@ private:
     UUiComponent* UiComponent;
     UPROPERTY(EditAnywhere, Category = "Weapon")
     UWeaponData* WeaponData;
+    UPROPERTY(EditAnywhere, Category = "Weapon")
+    USoundBase* FireSound;
+
     FTimerHandle ShootingTimerHandle;
     FTimerHandle FireAnimTimerHandle;
 

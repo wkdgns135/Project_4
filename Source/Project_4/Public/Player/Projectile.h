@@ -35,6 +35,7 @@ private:
     class UProjectileMovementComponent* ProjectileMovementComponent;
     class UStaticMeshComponent* ProjectileMeshComponent;
     class UParticleSystem* ImpactEffect;
+    class USoundBase* ImpactSound;
 
     FTimerHandle LifeTimerHandle;
     uint32 Damage;

@@ -52,6 +52,11 @@ AProjectile::AProjectile()
 		ImpactEffect = Particle.Object;
 	}
 
+    static ConstructorHelpers::FObjectFinder<USoundBase> Sound(TEXT("/Script/Engine.SoundCue'/Game/Team_4/Sources/Sound/SQ_AR_Projectile.SQ_AR_Projectile'"));
+    if (Sound.Succeeded()) {
+        ImpactSound = Sound.Object;
+    }
+
     // Bind the OnHit function to the collision component's hit event
     CollisionComponent->OnComponentHit.AddDynamic(this, &AProjectile::OnHit);
 }
@@ -80,6 +85,10 @@ void AProjectile::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, U
     if (ImpactEffect)
     {
         UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ImpactEffect, Hit.ImpactPoint, Hit.ImpactNormal.Rotation());
+    }
+
+    if (ImpactSound) {
+        UGameplayStatics::SpawnSoundAtLocation(GetWorld(), ImpactSound, Hit.ImpactPoint);
     }
 
     if (OtherActor->IsA(ATest_Enemy::StaticClass())) {
