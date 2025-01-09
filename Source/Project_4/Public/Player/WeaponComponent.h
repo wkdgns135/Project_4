@@ -66,10 +66,12 @@ public:
     void ReloadWeapon();
 
     void IncreaseAmmo(const uint32 Ammo);
-
+    
     bool GetIsShootable() const;
     bool GetIsReloadable() const;
 
     float GetFireRate() const { return WeaponData->FireRate; };
     float GetReload() const { return WeaponData->Reload; };
+
+    void InitWeapon();
 };

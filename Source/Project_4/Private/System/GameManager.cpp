@@ -63,3 +63,13 @@ FString UGameManager::GetCurrentWeaponTypeName()
 	FString WeaponTypeName = WeaponTypeEnum ? WeaponTypeEnum->GetNameStringByValue((int64)CurrentWeaponType) : TEXT("Defalut");
 	return WeaponTypeName;
 }
+
+void UGameManager::SetCurrentWeaponTier(const EWeaponTier& WeaponTier)
+{
+	CurrentWeaponTier = WeaponTier;
+}
+
+void UGameManager::SetCurrentWeaponType(const EWeaponType& WeaponType)
+{
+	CurrentWeaponType = WeaponType;
+}

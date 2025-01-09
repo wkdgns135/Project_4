@@ -7,6 +7,7 @@
 #include "InputMappingContext.h"
 #include "Components/CapsuleComponent.h"
 #include "TimerManager.h"
+#include <System/GameManager.h>
 
 // Sets default values
 APlayerCharacter::APlayerCharacter()
@@ -177,8 +178,9 @@ void APlayerCharacter::ResetReload() {
 
 void APlayerCharacter::GetDropWeapon(EWeaponTier GetTier, EWeaponType GetType)
 {
-	WeaponTier = GetTier;
-	WeaponType = GetType;
+	GetGameInstance()->GetSubsystem<UGameManager>()->SetCurrentWeaponTier(GetTier);
+	GetGameInstance()->GetSubsystem<UGameManager>()->SetCurrentWeaponType(GetType);
+	WeaponComponent->InitWeapon();
 }
 
 

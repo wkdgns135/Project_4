@@ -31,32 +31,8 @@ void UWeaponComponent::BeginPlay()
         UiComponent = OwnerCharacter->FindComponentByClass<UUiComponent>();
     }
 
-    UGameInstance* GameInstance = GetWorld()->GetGameInstance();
-    if (GameInstance)
-    {
-        UGameManager* GameManager = GameInstance->GetSubsystem<UGameManager>();
-        if (GameManager)
-        {
-            FString WeaponTypeName = GameManager->GetCurrentWeaponTypeName();
-            FString WeaponTierName = GameManager->GetCurrentWeaponTierName();
+    InitWeapon();
 
-            FString WeaponName = FString::Printf(TEXT("DA_%s_%s"), *WeaponTypeName, *WeaponTierName);
-            FString WeaponDataPath = FString::Printf(TEXT("/Game/Team_4/Sources/WeaponsData/%s/%s.%s"), *WeaponTypeName, *WeaponName, *WeaponName);
-
-            WeaponData = Cast<UWeaponData>(StaticLoadObject(UWeaponData::StaticClass(), nullptr, *WeaponDataPath));
-            if (!WeaponData)
-            {
-                UE_LOG(LogTemp, Warning, TEXT("Failed to load WeaponData from path: %s"), *WeaponDataPath);
-            }
-        }
-    }
-
-    CurrentAmmoCount = WeaponData->AmmoCount;
-    AmmoCount = CurrentAmmoCount * 3;
-    AmmoLimit = AmmoCount;
-    UiComponent->SetAmmoText(CurrentAmmoCount, AmmoCount);
-    IsShooting = false;
-	LastFireTime = 0.0f;
     // Object Pool ÃÊ±âÈ­
     ProjectilePool = GetWorld()->SpawnActor<AGenericPool>();
     ProjectilePool->InitPool<AProjectile>(10);
@@ -206,4 +182,33 @@ bool UWeaponComponent::GetIsShootable() const
 bool UWeaponComponent::GetIsReloadable() const
 {
     return !IsShooting && AmmoCount != 0 && WeaponData->AmmoCount != CurrentAmmoCount;
+}
+
+void UWeaponComponent::InitWeapon()
+{
+    UGameInstance* GameInstance = GetWorld()->GetGameInstance();
+    if (GameInstance)
+    {
+        UGameManager* GameManager = GameInstance->GetSubsystem<UGameManager>();
+        if (GameManager)
+        {
+            FString WeaponTypeName = GameManager->GetCurrentWeaponTypeName();
+            FString WeaponTierName = GameManager->GetCurrentWeaponTierName();
+
+            FString WeaponName = FString::Printf(TEXT("DA_%s_%s"), *WeaponTypeName, *WeaponTierName);
+            FString WeaponDataPath = FString::Printf(TEXT("/Game/Team_4/Sources/WeaponsData/%s/%s.%s"), *WeaponTypeName, *WeaponName, *WeaponName);
+
+            WeaponData = Cast<UWeaponData>(StaticLoadObject(UWeaponData::StaticClass(), nullptr, *WeaponDataPath));
+            if (!WeaponData)
+            {
+                UE_LOG(LogTemp, Warning, TEXT("Failed to load WeaponData from path: %s"), *WeaponDataPath);
+            }
+        }
+    }
+    CurrentAmmoCount = WeaponData->AmmoCount;
+    AmmoCount = CurrentAmmoCount * 3;
+    AmmoLimit = AmmoCount;
+    UiComponent->SetAmmoText(CurrentAmmoCount, AmmoCount);
+    IsShooting = false;
+    LastFireTime = 0.0f;
 }

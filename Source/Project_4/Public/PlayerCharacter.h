@@ -83,7 +83,4 @@ public:
 
 	UPROPERTY(VisibleAnywhere)
 	UCameraComponent* CHCameraComponent;
-
-	EWeaponTier WeaponTier;
-	EWeaponType WeaponType;
 };
