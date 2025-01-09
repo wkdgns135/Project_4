@@ -5,7 +5,7 @@
 #include "NavigationSystem.h"
 #include "Enemy/Controller/Test_EnemyController.h"
 #include <Kismet/GameplayStatics.h>
-#include "Enemy/Task/Test_Target_Point.h"
+#include "TargetArea/TargetArea.h"
 #include "GameFramework/Character.h"
 
 EBTNodeResult::Type UBT_Idle_Task::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* nodeMemory)
@@ -18,7 +18,7 @@ EBTNodeResult::Type UBT_Idle_Task::ExecuteTask(UBehaviorTreeComponent& OwnerComp
 	
 	if (Enemy)
 	{
-		auto targetPoint = UGameplayStatics::GetActorOfClass(GetWorld(), ATest_Target_Point::StaticClass());
+		auto targetPoint = UGameplayStatics::GetActorOfClass(GetWorld(), ATargetArea::StaticClass());
 
 		FVector enemyLocation = Enemy->GetActorLocation();
 		FVector targetPointLocation = targetPoint->GetActorLocation();
