@@ -96,8 +96,6 @@ FVector UWeaponComponent::CalculateShootDirection(const FVector& MuzzleLocation,
 
 void UWeaponComponent::SpawnProjectile(const FVector& MuzzleLocation, const FVector& ShootDirection)
 {
-    FActorSpawnParameters SpawnParams;
-
     AProjectile* Projectile = ProjectilePool->GetObject<AProjectile>();
     if (Projectile)
     {
