@@ -175,11 +175,5 @@ void APlayerCharacter::ResetReload() {
 	isReload = false;
 }
 
-void APlayerCharacter::GetDropWeapon(EWeaponTier GetTier, EWeaponType GetType)
-{
-	WeaponTier = GetTier;
-	WeaponType = GetType;
-}
-
 
 

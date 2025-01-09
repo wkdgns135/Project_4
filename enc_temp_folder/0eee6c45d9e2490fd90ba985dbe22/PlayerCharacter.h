@@ -5,7 +5,6 @@
 #include "GameFramework/Character.h"
 #include "Camera/CameraComponent.h"
 #include "Player/WeaponComponent.h"
-#include "System/PlayerData.h"
 #include "PlayerCharacter.generated.h"
 
 
@@ -79,11 +78,8 @@ public:
 	void StopFire();
 	void Reload();
 	void ResetReload();
-	void GetDropWeapon(EWeaponTier GetTier, EWeaponType GetType);
 
 	UPROPERTY(VisibleAnywhere)
 	UCameraComponent* CHCameraComponent;
 
-	EWeaponTier WeaponTier;
-	EWeaponType WeaponType;
 };

@@ -13,7 +13,7 @@ ATest_Enemy_Guard::ATest_Enemy_Guard()
 void ATest_Enemy_Guard::InitializeEnemy()
 {
    Super::InitializeEnemy();
-	maxHp = 300;
+	maxHp = 100;
 	strength = 10;
 	speed = 200.0f;
 	attackRange = 200.0f;

@@ -11,6 +11,7 @@ ATest_Enemy::ATest_Enemy()
 
 	GetCapsuleComponent()->SetCollisionProfileName(TEXT("Enemy"));
 	fsm = CreateDefaultSubobject<UEnemy_FSM>(TEXT("FSM"));
+	DropHandle = Cast<AItemDropHandle>(UGameplayStatics::GetActorOfClass(GetWorld(), AItemDropHandle::StaticClass()));
 }
 
 void ATest_Enemy::InitializeEnemy()
@@ -58,7 +59,7 @@ void ATest_Enemy::Die()
 
 void ATest_Enemy::DropItem()
 {
-	//어떤 확률로 무엇을 드랍할지 구현 필요.
+	DropHandle->SpawnWeapon(4, 2, GetActorLocation());
 }
 
 void ATest_Enemy::EndHit() { if (fsm) fsm->EndHitAction(); }
